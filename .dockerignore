@@ -1,0 +1,12 @@
+node_modules
+.git
+.env
+*.log
+scripts
+public/images/members/*-src.png
+public/images/members/cand*.png
+public/images/members/fill*.png
+public/images/members/try*.png
+public/images/members/a.png
+public/images/members/preview*.png
+README.md
