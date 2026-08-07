@@ -6,33 +6,87 @@ const { randomUUID } = require("crypto");
 
 const PORT = Number(process.env.PORT) || 3847;
 const ADMIN_KEY = process.env.ADMIN_KEY || "tuwaiq-admin-change-me";
-const DATA_DIR = path.join(__dirname, "data");
+const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, "data");
 const DB_PATH = path.join(DATA_DIR, "db.json");
-const SEED_PATH = path.join(DATA_DIR, "db.seed.json");
+const SEED_PATH = path.join(__dirname, "data", "db.seed.json");
 
 const app = express();
 app.use(cors());
 app.use(express.json({ limit: "1mb" }));
 app.use(express.static(path.join(__dirname, "public")));
 
+function readJsonSafe(filePath, fallback) {
+  try {
+    if (!fs.existsSync(filePath)) return fallback;
+    return JSON.parse(fs.readFileSync(filePath, "utf8"));
+  } catch {
+    return fallback;
+  }
+}
+
+function syncMembersFromSeed(db) {
+  const seed = readJsonSafe(SEED_PATH, null);
+  if (!seed || !Array.isArray(seed.members)) return db;
+
+  if (!db.site && seed.site) db.site = seed.site;
+
+  const byId = new Map(db.members.map((m) => [m.id, m]));
+  const byUser = new Map(
+    db.members.map((m) => [String(m.username || "").toLowerCase(), m])
+  );
+
+  for (const sm of seed.members) {
+    const existing =
+      byId.get(sm.id) || byUser.get(String(sm.username || "").toLowerCase());
+
+    if (existing) {
+      existing.username = sm.username;
+      existing.displayName = sm.displayName;
+      existing.role = sm.role;
+      existing.title = sm.title || null;
+      existing.bio = sm.bio || "";
+      existing.avatar = sm.avatar || null;
+      existing.flag = sm.flag || null;
+      existing.order = sm.order;
+      existing.opinions = Array.isArray(existing.opinions) ? existing.opinions : [];
+    } else {
+      db.members.push({
+        ...sm,
+        opinions: Array.isArray(sm.opinions) ? sm.opinions : [],
+      });
+    }
+  }
+
+  return db;
+}
+
 function ensureDb() {
   if (!fs.existsSync(DATA_DIR)) {
     fs.mkdirSync(DATA_DIR, { recursive: true });
   }
+
   if (!fs.existsSync(DB_PATH)) {
-    if (fs.existsSync(SEED_PATH)) {
-      fs.copyFileSync(SEED_PATH, DB_PATH);
-      return;
-    }
-    const initial = {
+    const seed = readJsonSafe(SEED_PATH, {
       site: {
         name: "طويق",
         tagline: "الموقع الرسمي لأعضاء قروب طويق",
       },
       members: [],
-    };
-    fs.writeFileSync(DB_PATH, JSON.stringify(initial, null, 2), "utf8");
+    });
+    fs.writeFileSync(DB_PATH, JSON.stringify(seed, null, 2), "utf8");
+    return;
   }
+
+  // حدّث بيانات الأعضاء من الـ seed بدون مسح الآراء المخزّنة
+  const db = readJsonSafe(DB_PATH, null);
+  if (!db || !Array.isArray(db.members)) {
+    const seed = readJsonSafe(SEED_PATH, { site: { name: "طويق", tagline: "" }, members: [] });
+    fs.writeFileSync(DB_PATH, JSON.stringify(seed, null, 2), "utf8");
+    return;
+  }
+
+  const synced = syncMembersFromSeed(db);
+  fs.writeFileSync(DB_PATH, JSON.stringify(synced, null, 2), "utf8");
 }
 
 function readDb() {
@@ -41,8 +95,12 @@ function readDb() {
 }
 
 function writeDb(db) {
-  ensureDb();
-  fs.writeFileSync(DB_PATH, JSON.stringify(db, null, 2), "utf8");
+  if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+  }
+  const tmp = `${DB_PATH}.${process.pid}.tmp`;
+  fs.writeFileSync(tmp, JSON.stringify(db, null, 2), "utf8");
+  fs.renameSync(tmp, DB_PATH);
 }
 
 function requireAdmin(req, res, next) {
@@ -52,6 +110,14 @@ function requireAdmin(req, res, next) {
   }
   next();
 }
+
+app.get("/api/health", (_req, res) => {
+  res.json({
+    ok: true,
+    dataDir: DATA_DIR,
+    dbExists: fs.existsSync(DB_PATH),
+  });
+});
 
 app.get("/api/site", (_req, res) => {
   const db = readDb();
@@ -176,6 +242,15 @@ app.post("/api/members/:id/opinions", (req, res) => {
   member.opinions = member.opinions || [];
   member.opinions.push(opinion);
   writeDb(db);
+
+  // تأكيد إن الحفظ نجح قبل الرد
+  const saved = readDb();
+  const savedMember = saved.members.find((m) => m.id === req.params.id);
+  const savedOpinion = (savedMember?.opinions || []).find((o) => o.id === opinion.id);
+  if (!savedOpinion) {
+    return res.status(500).json({ error: "فشل حفظ الرأي، حاول مرة ثانية" });
+  }
+
   res.status(201).json(opinion);
 });
 
@@ -201,6 +276,7 @@ if (process.env.VERCEL) {
 } else {
   app.listen(PORT, () => {
     console.log(`سيرفر طويق الرسمي يعمل على http://localhost:${PORT}`);
-    console.log(`منفذ مخصص: ${PORT} — قاعدة بيانات مستقلة في /data`);
+    console.log(`التخزين الدائم: ${DATA_DIR}`);
+    console.log(`قاعدة البيانات: ${DB_PATH}`);
   });
 }

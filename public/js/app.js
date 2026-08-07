@@ -266,12 +266,19 @@ form.addEventListener("submit", async (event) => {
   if (submitBtn) submitBtn.disabled = true;
 
   try {
-    await fetchJson(`/api/members/${activeMemberId}/opinions`, {
+    const created = await fetchJson(`/api/members/${activeMemberId}/opinions`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
+
+    // أظهر الرأي فورًا للجميع على الصفحة الحالية
+    const cached = membersCache.find((m) => m.id === activeMemberId);
+    const next = [created, ...((cached && cached.opinions) || [])];
+    updateOpinionPanel(activeMemberId, next);
+
     dialog.close();
+    // ثم حدّث من السيرفر للتأكيد أن الحفظ الدائم تم
     await loadOpinions(activeMemberId);
   } catch (err) {
     formError.textContent = err.message;
