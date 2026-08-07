@@ -441,6 +441,12 @@ main,
   transform: scale(1.08);
 }
 
+.avatar-img--full {
+  object-fit: cover;
+  object-position: center;
+  transform: none;
+}
+
 .avatar-fallback {
   line-height: 1;
 }
