@@ -295,7 +295,41 @@ form.addEventListener("submit", async (event) => {
   }
 });
 
+function formatVisitCount(count) {
+  try {
+    return new Intl.NumberFormat("ar-SA").format(Number(count) || 0);
+  } catch {
+    return String(Number(count) || 0);
+  }
+}
+
+function showVisitCount(count) {
+  const label = `عدد الزيارات: ${formatVisitCount(count)}`;
+  const aboutEl = document.getElementById("visit-count");
+  const footerEl = document.getElementById("visit-count-footer");
+  if (aboutEl) aboutEl.textContent = label;
+  if (footerEl) footerEl.textContent = label;
+}
+
+async function trackVisit() {
+  const key = "tuwaiq_visit_counted";
+  try {
+    if (localStorage.getItem(key)) {
+      const data = await fetchJson("/api/visits");
+      showVisitCount(data.count);
+      return;
+    }
+    const data = await fetchJson("/api/visits", { method: "POST" });
+    localStorage.setItem(key, "1");
+    showVisitCount(data.count);
+  } catch {
+    const aboutEl = document.getElementById("visit-count");
+    if (aboutEl) aboutEl.textContent = "عدد الزيارات: —";
+  }
+}
+
 async function init() {
+  trackVisit();
   try {
     const members = await fetchJson("/api/members");
     renderMembers(members);

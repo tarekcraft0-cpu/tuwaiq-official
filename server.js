@@ -24,11 +24,25 @@ function readJsonSafe(filePath, fallback) {
   }
 }
 
+function ensureSiteStats(db) {
+  if (!db.site || typeof db.site !== "object") {
+    db.site = {
+      name: "طويق",
+      tagline: "الموقع الرسمي لأعضاء قروب طويق",
+    };
+  }
+  if (!Number.isFinite(db.site.visitCount) || db.site.visitCount < 0) {
+    db.site.visitCount = 0;
+  }
+  return db;
+}
+
 function syncMembersFromSeed(db) {
   const seed = readJsonSafe(SEED_PATH, null);
   if (!seed || !Array.isArray(seed.members)) return db;
 
   if (!db.site && seed.site) db.site = seed.site;
+  ensureSiteStats(db);
 
   const byId = new Map(db.members.map((m) => [m.id, m]));
   const byUser = new Map(
@@ -85,7 +99,7 @@ function ensureDb() {
     return;
   }
 
-  const synced = syncMembersFromSeed(db);
+  const synced = ensureSiteStats(syncMembersFromSeed(db));
   fs.writeFileSync(DB_PATH, JSON.stringify(synced, null, 2), "utf8");
 }
 
@@ -120,12 +134,25 @@ app.get("/api/health", (_req, res) => {
 });
 
 app.get("/api/site", (_req, res) => {
-  const db = readDb();
+  const db = ensureSiteStats(readDb());
   res.json({
     name: db.site.name,
     tagline: db.site.tagline,
     memberCount: db.members.length,
+    visitCount: db.site.visitCount || 0,
   });
+});
+
+app.get("/api/visits", (_req, res) => {
+  const db = ensureSiteStats(readDb());
+  res.json({ count: db.site.visitCount || 0 });
+});
+
+app.post("/api/visits", (_req, res) => {
+  const db = ensureSiteStats(readDb());
+  db.site.visitCount = (db.site.visitCount || 0) + 1;
+  writeDb(db);
+  res.json({ count: db.site.visitCount });
 });
 
 app.get("/api/members", (_req, res) => {
