@@ -24,6 +24,8 @@ function readJsonSafe(filePath, fallback) {
   }
 }
 
+const VISIT_BASELINE = 133;
+
 function ensureSiteStats(db) {
   if (!db.site || typeof db.site !== "object") {
     db.site = {
@@ -31,8 +33,8 @@ function ensureSiteStats(db) {
       tagline: "الموقع الرسمي لأعضاء قروب طويق",
     };
   }
-  if (!Number.isFinite(db.site.visitCount) || db.site.visitCount < 0) {
-    db.site.visitCount = 0;
+  if (!Number.isFinite(db.site.visitCount) || db.site.visitCount < VISIT_BASELINE) {
+    db.site.visitCount = VISIT_BASELINE;
   }
   return db;
 }

@@ -304,27 +304,47 @@ function formatVisitCount(count) {
 }
 
 function showVisitCount(count) {
-  const label = `عدد الزيارات: ${formatVisitCount(count)}`;
-  const aboutEl = document.getElementById("visit-count");
-  const footerEl = document.getElementById("visit-count-footer");
-  if (aboutEl) aboutEl.textContent = label;
-  if (footerEl) footerEl.textContent = label;
+  const numEl = document.getElementById("visit-count-num");
+  if (!numEl) return;
+  const next = Number(count) || 0;
+  const prev = Number(String(numEl.dataset.value || numEl.textContent).replace(/[^\d]/g, "")) || 0;
+  numEl.dataset.value = String(next);
+  if (prev === next) {
+    numEl.textContent = formatVisitCount(next);
+    return;
+  }
+  const start = prev;
+  const diff = next - start;
+  const steps = Math.min(24, Math.abs(diff));
+  if (steps <= 1) {
+    numEl.textContent = formatVisitCount(next);
+    return;
+  }
+  let i = 0;
+  const tick = () => {
+    i += 1;
+    const value = Math.round(start + (diff * i) / steps);
+    numEl.textContent = formatVisitCount(value);
+    if (i < steps) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
 }
 
 async function trackVisit() {
-  const key = "tuwaiq_visit_counted";
+  const key = "tuwaiq_visit_session";
   try {
-    if (localStorage.getItem(key)) {
+    // كل شخص يدخل (جلسة جديدة) يزيد العداد مرة
+    if (sessionStorage.getItem(key)) {
       const data = await fetchJson("/api/visits");
       showVisitCount(data.count);
       return;
     }
     const data = await fetchJson("/api/visits", { method: "POST" });
-    localStorage.setItem(key, "1");
+    sessionStorage.setItem(key, "1");
     showVisitCount(data.count);
   } catch {
-    const aboutEl = document.getElementById("visit-count");
-    if (aboutEl) aboutEl.textContent = "عدد الزيارات: —";
+    const numEl = document.getElementById("visit-count-num");
+    if (numEl) numEl.textContent = "—";
   }
 }
 
