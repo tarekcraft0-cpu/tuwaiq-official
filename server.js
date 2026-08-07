@@ -195,7 +195,12 @@ app.get("*", (_req, res) => {
 });
 
 ensureDb();
-app.listen(PORT, () => {
-  console.log(`سيرفر طويق الرسمي يعمل على http://localhost:${PORT}`);
-  console.log(`منفذ مخصص: ${PORT} — قاعدة بيانات مستقلة في /data`);
-});
+
+if (process.env.VERCEL) {
+  module.exports = app;
+} else {
+  app.listen(PORT, () => {
+    console.log(`سيرفر طويق الرسمي يعمل على http://localhost:${PORT}`);
+    console.log(`منفذ مخصص: ${PORT} — قاعدة بيانات مستقلة في /data`);
+  });
+}
