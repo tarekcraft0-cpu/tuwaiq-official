@@ -254,6 +254,25 @@ app.post("/api/members/:id/opinions", (req, res) => {
   res.status(201).json(opinion);
 });
 
+app.delete("/api/members/:id/opinions/:opinionId", requireAdmin, (req, res) => {
+  const db = readDb();
+  const member = db.members.find((m) => m.id === req.params.id);
+  if (!member) {
+    return res.status(404).json({ error: "العضو غير موجود" });
+  }
+
+  const before = (member.opinions || []).length;
+  member.opinions = (member.opinions || []).filter(
+    (o) => o.id !== req.params.opinionId
+  );
+  if (member.opinions.length === before) {
+    return res.status(404).json({ error: "الرأي غير موجود" });
+  }
+
+  writeDb(db);
+  res.json({ ok: true });
+});
+
 app.delete("/api/members/:id", requireAdmin, (req, res) => {
   const db = readDb();
   const before = db.members.length;
