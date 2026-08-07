@@ -49,10 +49,10 @@ function formatBio(bio) {
 
 function renderAvatar(member) {
   if (member.avatar) {
-    const fullCircle = ["nelo-8zf", "dana-aub"].includes(member.id)
+    const fullCircle = ["nelo-8zf", "dana-aub", "munira-4d9"].includes(member.id)
       ? " avatar-img--full"
       : "";
-    return `<img class="avatar-img${fullCircle}" src="${escapeHtml(member.avatar)}?v=8" alt="${escapeHtml(member.displayName)}" width="120" height="120" />`;
+    return `<img class="avatar-img${fullCircle}" src="${escapeHtml(member.avatar)}?v=9" alt="${escapeHtml(member.displayName)}" width="120" height="120" />`;
   }
   return `<span class="avatar-fallback">${escapeHtml(member.avatarInitial)}</span>`;
 }
@@ -122,10 +122,10 @@ function openBioSheet(memberId) {
 
   if (member.avatar) {
     bioSheetAvatar.hidden = false;
-    bioSheetAvatar.src = `${member.avatar}?v=8`;
+    bioSheetAvatar.src = `${member.avatar}?v=9`;
     bioSheetAvatar.classList.toggle(
       "avatar-img--full",
-      ["nelo-8zf", "dana-aub"].includes(member.id)
+      ["nelo-8zf", "dana-aub", "munira-4d9"].includes(member.id)
     );
     bioSheetAvatar.alt = member.displayName;
   } else {
