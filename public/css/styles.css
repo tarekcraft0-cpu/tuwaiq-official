@@ -327,13 +327,14 @@ main,
 
 /* العلم كامل خلف الأفاتار ومرتفع لفوق شوية */
 .tuwaiq-flag {
+  --flag-lift: -2.4rem;
   position: absolute;
   left: 50%;
   bottom: 28%;
   z-index: 1;
   width: clamp(8.5rem, 26vw, 12rem);
   height: clamp(13.5rem, 40vw, 18rem);
-  transform: translateX(-0.16rem) translateY(-2.4rem);
+  transform: translateX(-0.16rem) translateY(var(--flag-lift));
   pointer-events: none;
   animation: flag-rise 1.15s cubic-bezier(0.2, 0.85, 0.25, 1) both;
 }
@@ -379,11 +380,11 @@ main,
 @keyframes flag-rise {
   from {
     opacity: 0;
-    transform: translateX(-0.16rem) translateY(-0.4rem) scale(0.92);
+    transform: translateX(-0.16rem) translateY(calc(var(--flag-lift) + 1.8rem)) scale(0.92);
   }
   to {
     opacity: 1;
-    transform: translateX(-0.16rem) translateY(-2.4rem) scale(1);
+    transform: translateX(-0.16rem) translateY(var(--flag-lift)) scale(1);
   }
 }
 
@@ -1620,7 +1621,8 @@ body.sheet-open {
 
   .tuwaiq-flag {
     width: 7.4rem;
-    height: 11rem;
+    height: 12.5rem;
+    transform: translateX(-0.16rem) translateY(-1.8rem);
   }
 
   .float-chip {
