@@ -59,15 +59,15 @@ export function Footer() {
         <div>
           <p className="mb-3 text-sm font-bold">استكشف</p>
           <div className="flex flex-col gap-2 text-sm text-[var(--muted)]">
-            <Link href="/" className="hover:text-[var(--gold-soft)]">
+            <a href="/" className="hover:text-[var(--gold-soft)]">
               الرئيسية
-            </Link>
-            <Link href="/#members" className="hover:text-[var(--gold-soft)]">
+            </a>
+            <a href="/#members" className="hover:text-[var(--gold-soft)]">
               الأعضاء
-            </Link>
-            <Link href="/#arena" className="hover:text-[var(--gold-soft)]">
+            </a>
+            <a href="/#arena" className="hover:text-[var(--gold-soft)]">
               البطولات
-            </Link>
+            </a>
             <Link href="/rankings" className="hover:text-[var(--gold-soft)]">
               أفضل 100 لاعب
             </Link>

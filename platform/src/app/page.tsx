@@ -1,14 +1,6 @@
-"use client";
+import { redirect } from "next/navigation";
 
-import { PlatformHomeSections } from "@/components/home/PlatformHomeSections";
-import { TuwaiqEmbed } from "@/components/home/TuwaiqEmbed";
-
-/** صفحة واحدةحدة: واجهة طويق + البطولات معاً */
-export default function UnifiedHomePage() {
-  return (
-    <div className="-mt-2">
-      <TuwaiqEmbed />
-      <PlatformHomeSections />
-    </div>
-  );
+/** الاحتياط فقط — الرئيسية الحقيقية من Express على / */
+export default function PlatformRootPage() {
+  redirect("/tournaments");
 }

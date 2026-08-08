@@ -12,12 +12,12 @@ import {
 import { cn } from "@/lib/utils";
 
 const items = [
-  { href: "/", label: "الرئيسية", icon: Home },
-  { href: "/#arena", label: "البطولات", icon: Trophy },
+  { href: "/", label: "الرئيسية", icon: Home, hard: true },
+  { href: "/tournaments", label: "البطولات", icon: Trophy },
   { href: "/players", label: "اللاعبون", icon: Users },
   { href: "/votes", label: "التصويت", icon: Vote },
   { href: "/more", label: "المزيد", icon: MoreHorizontal },
-];
+] as const;
 
 export function MobileNav() {
   const pathname = usePathname();
@@ -31,24 +31,29 @@ export function MobileNav() {
             item.href === "/"
               ? pathname === "/"
               : pathname.startsWith(item.href);
+          const className = cn(
+            "flex flex-1 flex-col items-center gap-1 py-2.5 text-[11px] transition duration-300",
+            active
+              ? "text-[var(--gold-soft)]"
+              : "text-zinc-400 active:scale-95",
+          );
+          const iconClass = cn(
+            "transition duration-300",
+            active && "drop-shadow-[0_0_8px_rgba(212,168,75,0.45)]",
+          );
+
+          if ("hard" in item && item.hard) {
+            return (
+              <a key={item.href} href={item.href} className={className}>
+                <Icon size={20} className={iconClass} />
+                {item.label}
+              </a>
+            );
+          }
+
           return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "flex flex-1 flex-col items-center gap-1 py-2.5 text-[11px] transition duration-300",
-                active
-                  ? "text-[var(--gold-soft)]"
-                  : "text-zinc-400 active:scale-95",
-              )}
-            >
-              <Icon
-                size={20}
-                className={cn(
-                  "transition duration-300",
-                  active && "drop-shadow-[0_0_8px_rgba(212,168,75,0.45)]",
-                )}
-              />
+            <Link key={item.href} href={item.href} className={className}>
+              <Icon size={20} className={iconClass} />
               {item.label}
             </Link>
           );

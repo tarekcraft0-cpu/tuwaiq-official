@@ -678,6 +678,40 @@ main,
   justify-content: center;
 }
 
+.arena-tournaments {
+  display: grid;
+  gap: 0.85rem;
+  margin-top: 1.5rem;
+}
+
+.arena-card {
+  display: block;
+  padding: 1rem 1.15rem;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 50%),
+    var(--bg-lift);
+  transition: border-color 0.25s ease, transform 0.25s ease;
+}
+
+.arena-card:hover {
+  border-color: var(--copper);
+  transform: translateY(-2px);
+}
+
+.arena-card-name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--ink);
+}
+
+.arena-card-meta {
+  margin: 0.35rem 0 0;
+  font-size: 0.88rem;
+  color: var(--ink-mute);
+}
+
 .btn {
   appearance: none;
   border: 1px solid transparent;

@@ -2,13 +2,309 @@
 <html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="refresh" content="0;url=/" />
-    <title>طويق</title>
-    <script>
-      location.replace("/");
-    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>طويق — الموقع الرسمي لقروب طويق</title>
+    <meta
+      name="description"
+      content="موقع قروب طويق الرسمي: الأعضاء والآراء والبطولات في مكان واحد."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Noto+Naskh+Arabic:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/png" href="/images/tuwaiq-logo.png" />
+    <link rel="apple-touch-icon" href="/images/tuwaiq-logo.png" />
+    <link rel="stylesheet" href="/css/styles.css" />
   </head>
   <body>
-    <p><a href="/">الانتقال إلى طويق</a></p>
+    <div class="atmosphere" aria-hidden="true">
+      <div class="ridge"></div>
+      <div class="dust"></div>
+    </div>
+
+    <header class="topbar">
+      <a class="brand-mark" href="#top" aria-label="طويق">
+        <img
+          class="brand-mark-img"
+          src="/images/tuwaiq-logo.png"
+          alt=""
+          width="40"
+          height="40"
+        />
+        طويق
+      </a>
+      <nav class="nav">
+        <a href="#group-opinions">رأيك</a>
+        <a href="#members">الأعضاء</a>
+        <a href="#arena">البطولات</a>
+        <a href="/join">تسجيل</a>
+        <a href="/rankings">الترتيب</a>
+        <a href="/players">اللاعبون</a>
+        <a href="/shop">المتجر</a>
+        <a href="/more">المزيد</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-copy">
+          <div class="hero-stage reveal">
+            <div id="hero-float-opinions" class="hero-float-opinions" aria-hidden="true"></div>
+            <div class="hero-emblem">
+              <svg class="flag-filter-defs" aria-hidden="true" width="0" height="0">
+                <filter id="flag-ripple" x="-20%" y="-20%" width="140%" height="140%">
+                  <feTurbulence
+                    type="fractalNoise"
+                    baseFrequency="0.012 0.04"
+                    numOctaves="2"
+                    seed="3"
+                    result="noise"
+                  >
+                    <animate
+                      attributeName="baseFrequency"
+                      dur="3.2s"
+                      values="0.012 0.04;0.018 0.06;0.012 0.04"
+                      repeatCount="indefinite"
+                    />
+                  </feTurbulence>
+                  <feDisplacementMap
+                    in="SourceGraphic"
+                    in2="noise"
+                    scale="10"
+                    xChannelSelector="R"
+                    yChannelSelector="G"
+                  />
+                </filter>
+              </svg>
+              <div class="tuwaiq-flag" aria-hidden="true">
+                <span class="tuwaiq-flag-pole"></span>
+                <span class="tuwaiq-flag-cloth">
+                  <img src="/images/tuwaiq-logo.png" alt="" width="180" height="120" />
+                </span>
+              </div>
+              <div class="hero-logo">
+                <img
+                  src="/images/tuwaiq-logo.png"
+                  alt="شعار قروب طويق"
+                  width="320"
+                  height="320"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="anthem-block reveal delay-1">
+            <p class="anthem-title">النشيد الوطني لطويق الوطن</p>
+            <button type="button" class="voice-note" id="anthem-toggle" aria-pressed="false">
+              <span class="voice-note-play" aria-hidden="true">
+                <svg class="icon-play" viewBox="0 0 24 24" width="18" height="18">
+                  <path fill="currentColor" d="M8 5v14l11-7z" />
+                </svg>
+                <svg class="icon-pause" viewBox="0 0 24 24" width="18" height="18" hidden>
+                  <path fill="currentColor" d="M6 5h4v14H6zm8 0h4v14h-4z" />
+                </svg>
+              </span>
+              <span class="voice-note-wave" aria-hidden="true">
+                <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+              </span>
+              <span class="voice-note-time" id="anthem-time">0:00</span>
+            </button>
+            <video
+              id="anthem-media"
+              class="anthem-media"
+              src="/media/tuwaiq-anthem.mp4"
+              preload="metadata"
+              playsinline
+              controlslist="nodownload"
+            ></video>
+          </div>
+
+          <div class="visit-badge reveal delay-1" aria-live="polite">
+            <span class="visit-badge-label">زيارات الموقع</span>
+            <span id="visit-count-num" class="visit-badge-num">133</span>
+          </div>
+          <h1 class="reveal delay-2">طويق</h1>
+          <p class="hero-lead reveal delay-3">
+            موقع قروب طويق الرسمي في مكان واحد: الأعضاء والآراء، والبطولات والتسجيل
+            والترتيب والمتجر.
+          </p>
+          <div class="hero-actions reveal delay-3">
+            <a class="btn btn-primary" href="#group-opinions">اكتب رأيك في طويق</a>
+            <a class="btn btn-outline" href="#members">آراء الأعضاء</a>
+            <a class="btn btn-outline" href="#arena">البطولات</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="group-opinions" class="group-opinions">
+        <div class="section-head">
+          <h2>رأيك في قروب طويق</h2>
+        </div>
+
+        <form id="group-opinion-form" class="group-opinion-form">
+          <label class="field">
+            <span>اسمك (اختياري)</span>
+            <input
+              type="text"
+              name="author"
+              maxlength="40"
+              placeholder="زائر"
+              autocomplete="nickname"
+            />
+          </label>
+          <label class="field">
+            <span>رأيك في القروب</span>
+            <textarea
+              name="text"
+              rows="3"
+              maxlength="280"
+              required
+              placeholder="وش رأيك في قروب طويق بشكل عام؟"
+            ></textarea>
+          </label>
+          <p id="group-form-error" class="form-error" hidden></p>
+          <button type="submit" class="btn btn-primary" id="submit-group-opinion">
+            انشر رأيك
+          </button>
+        </form>
+
+        <div id="group-opinions-list" class="group-opinions-list" aria-live="polite"></div>
+      </section>
+
+      <section id="about" class="about">
+        <h2>عن طويق</h2>
+        <p>
+          هذا الموقع مخصص لقروب طويق: السير والآراء، ومعها البطولات والتسجيل والإحصائيات
+          في نفس المكان.
+        </p>
+      </section>
+
+      <section id="members" class="members">
+        <div class="section-head">
+          <h2>الأعضاء</h2>
+          <p class="section-sub">
+            اضغط على أي عضو عشان تروح مباشرة لآرائه. القائمة مقسومة ثلاثة في كل صف
+          </p>
+          <p id="member-count" class="count-line" hidden></p>
+        </div>
+
+        <div id="empty-state" class="empty" hidden>
+          <p class="empty-title">لم يُضف أعضاء بعد</p>
+          <p class="empty-text">
+            الموقع جاهز. عند إرسال الحسابات والسير الذاتية سيتم إضافتهم هنا.
+          </p>
+        </div>
+
+        <div id="members-grid" class="members-grid" aria-label="قائمة الأعضاء"></div>
+        <div id="members-opinions" class="members-opinions" aria-live="polite"></div>
+      </section>
+
+      <section id="arena" class="about">
+        <div class="section-head">
+          <h2>بطولات طويق</h2>
+          <p class="section-sub">
+            التسجيل والشجرة والترتيب والمتجر والتصويت — من نفس الموقع.
+          </p>
+        </div>
+        <div class="hero-actions" style="margin-top: 1rem">
+          <a class="btn btn-primary" href="/tournaments">البطولات</a>
+          <a class="btn btn-outline" href="/join">التسجيل</a>
+          <a class="btn btn-outline" href="/rankings">الترتيب</a>
+          <a class="btn btn-outline" href="/players">اللاعبون</a>
+          <a class="btn btn-outline" href="/votes">التصويت</a>
+          <a class="btn btn-outline" href="/news">الأخبار</a>
+          <a class="btn btn-outline" href="/shop">المتجر</a>
+          <a class="btn btn-outline" href="/hall-of-fame">لوحة الشرف</a>
+          <a class="btn btn-outline" href="/calendar">التقويم</a>
+          <a class="btn btn-outline" href="/rules">القوانين</a>
+          <a class="btn btn-outline" href="/login">دخول</a>
+        </div>
+        <div id="arena-tournaments" class="arena-tournaments" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p><span class="footer-brand">طويق</span> — موقع رسمي مستقل لقروب طويق</p>
+    </footer>
+
+    <div id="bio-backdrop" class="bio-backdrop" hidden></div>
+    <aside id="bio-sheet" class="bio-sheet" hidden aria-modal="true" role="dialog" aria-labelledby="bio-sheet-name">
+      <div class="bio-sheet-handle" aria-hidden="true"></div>
+      <header class="bio-sheet-head">
+        <button type="button" class="bio-sheet-close" id="close-bio" aria-label="إغلاق">×</button>
+        <div class="bio-sheet-identity">
+          <img id="bio-sheet-avatar" class="bio-sheet-avatar" alt="" width="88" height="88" hidden />
+          <div>
+            <p id="bio-sheet-role" class="bio-sheet-role"></p>
+            <h3 id="bio-sheet-name"></h3>
+            <p id="bio-sheet-user" class="bio-sheet-user"></p>
+            <p id="bio-sheet-title" class="bio-sheet-title"></p>
+          </div>
+        </div>
+      </header>
+      <div class="bio-sheet-scroll">
+        <p class="bio-sheet-kicker">السيرة</p>
+        <div id="bio-sheet-body" class="bio-sheet-body"></div>
+      </div>
+    </aside>
+
+    <dialog id="opinion-dialog" class="dialog">
+      <form id="opinion-form">
+        <header class="dialog-head">
+          <h3>اكتب رأيك للجميع</h3>
+          <p id="dialog-member" class="dialog-member"></p>
+          <p class="dialog-note">رأيك بيننشر ويظهر لكل الزوار تحت العضو</p>
+        </header>
+
+        <label class="field">
+          <span>اسمك (اختياري)</span>
+          <input
+            type="text"
+            name="author"
+            maxlength="40"
+            placeholder="زائر"
+            autocomplete="nickname"
+          />
+        </label>
+
+        <fieldset class="verdict">
+          <legend>هل الكلام حقيقي؟</legend>
+          <label class="verdict-option">
+            <input type="radio" name="verdict" value="true" required />
+            <span>حقيقي</span>
+          </label>
+          <label class="verdict-option">
+            <input type="radio" name="verdict" value="false" required />
+            <span>غير حقيقي</span>
+          </label>
+        </fieldset>
+
+        <label class="field">
+          <span>رأيك</span>
+          <textarea
+            name="text"
+            rows="4"
+            maxlength="500"
+            required
+            placeholder="اكتب رأيك بوضوح... الكل بيشوفه"
+          ></textarea>
+        </label>
+
+        <p id="form-error" class="form-error" hidden></p>
+
+        <div class="dialog-actions">
+          <button type="button" class="btn btn-ghost" id="cancel-opinion">
+            إلغاء
+          </button>
+          <button type="submit" class="btn btn-primary" id="submit-opinion">
+            نشر للجميع
+          </button>
+        </div>
+      </form>
+    </dialog>
+
+    <script src="/js/app.js" defer></script>
   </body>
 </html>

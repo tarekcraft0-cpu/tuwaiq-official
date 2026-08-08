@@ -21,16 +21,16 @@ import { isStaff, roleLabel } from "@/lib/roles";
 import { cn } from "@/lib/utils";
 
 const links = [
-  { href: "/", label: "الرئيسية" },
-  { href: "/#members", label: "الأعضاء" },
-  { href: "/#arena", label: "البطولات" },
+  { href: "/", label: "الرئيسية", hard: true },
+  { href: "/#members", label: "الأعضاء", hard: true },
+  { href: "/#arena", label: "البطولات", hard: true },
   { href: "/join", label: "تسجيل" },
   { href: "/rankings", label: "الترتيب" },
   { href: "/players", label: "اللاعبون" },
   { href: "/shop", label: "المتجر" },
   { href: "/votes", label: "التصويت" },
   { href: "/more", label: "المزيد" },
-];
+] as const;
 
 export function Navbar() {
   const pathname = usePathname();
@@ -87,7 +87,7 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b border-white/5 bg-[#1a100d]/85 backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 lg:px-6">
-        <Link href="/" className="flex items-center gap-3 transition duration-300 hover:opacity-90">
+        <a href="/" className="flex items-center gap-3 transition duration-300 hover:opacity-90">
           <Image
             src="/logo.png"
             alt="طويق"
@@ -102,23 +102,29 @@ export function Navbar() {
             </div>
             <div className="text-[11px] text-[var(--muted)]">قروب طويق — مكان واحد</div>
           </div>
-        </Link>
+        </a>
 
         <nav className="hidden items-center gap-1 lg:flex">
-          {links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={cn(
-                "rounded-full px-3 py-2 text-sm transition duration-300",
-                pathname === link.href
-                  ? "bg-[var(--gold-dim)] text-[var(--gold-soft)]"
-                  : "text-zinc-300 hover:bg-white/5 hover:text-white",
-              )}
-            >
-              {link.label}
-            </Link>
-          ))}
+          {links.map((link) => {
+            const className = cn(
+              "rounded-full px-3 py-2 text-sm transition duration-300",
+              pathname === link.href
+                ? "bg-[var(--gold-dim)] text-[var(--gold-soft)]"
+                : "text-zinc-300 hover:bg-white/5 hover:text-white",
+            );
+            if ("hard" in link && link.hard) {
+              return (
+                <a key={link.href} href={link.href} className={className}>
+                  {link.label}
+                </a>
+              );
+            }
+            return (
+              <Link key={link.href} href={link.href} className={className}>
+                {link.label}
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="flex items-center gap-2">
@@ -351,21 +357,36 @@ export function Navbar() {
       {open ? (
         <div className="border-t border-white/5 bg-[#0c0c10] px-4 py-4 lg:hidden">
           <div className="flex flex-col gap-1">
-            {links.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setOpen(false)}
-                className={cn(
-                  "rounded-full px-3 py-2.5 text-sm transition",
-                  pathname === link.href
-                    ? "bg-[var(--gold-dim)] text-[var(--gold-soft)]"
-                    : "text-zinc-300",
-                )}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {links.map((link) => {
+              const className = cn(
+                "rounded-full px-3 py-2.5 text-sm transition",
+                pathname === link.href
+                  ? "bg-[var(--gold-dim)] text-[var(--gold-soft)]"
+                  : "text-zinc-300",
+              );
+              if ("hard" in link && link.hard) {
+                return (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setOpen(false)}
+                    className={className}
+                  >
+                    {link.label}
+                  </a>
+                );
+              }
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setOpen(false)}
+                  className={className}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
             {user ? (
               <>
                 <Link

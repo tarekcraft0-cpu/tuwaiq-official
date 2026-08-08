@@ -599,6 +599,47 @@ function setupAnthemPlayer() {
   syncUi();
 }
 
+async function loadArenaTournaments() {
+  const box = document.getElementById("arena-tournaments");
+  if (!box) return;
+  try {
+    const res = await fetch("/api/store");
+    const payload = await res.json().catch(() => ({}));
+    const list = Array.isArray(payload?.data?.tournaments)
+      ? payload.data.tournaments
+      : [];
+    const visible = list
+      .filter((t) => t && !t.registrationOnly)
+      .slice(0, 6);
+    if (!visible.length) {
+      box.innerHTML = "";
+      return;
+    }
+    box.innerHTML = visible
+      .map((t) => {
+        const status =
+          t.status === "ongoing"
+            ? "جارية"
+            : t.status === "upcoming"
+              ? "قادمة"
+              : t.status === "finished"
+                ? "منتهية"
+                : String(t.status || "");
+        return `
+          <a class="arena-card" href="/tournaments/${escapeHtml(t.id)}">
+            <p class="arena-card-name">${escapeHtml(t.name || "بطولة")}</p>
+            <p class="arena-card-meta">${escapeHtml(status)} · ${escapeHtml(
+              String(t.game || "")
+            )}</p>
+          </a>
+        `;
+      })
+      .join("");
+  } catch {
+    box.innerHTML = "";
+  }
+}
+
 async function init() {
   trackVisit();
   setupAnthemPlayer();
@@ -608,6 +649,7 @@ async function init() {
         `<p class="group-opinions-empty">تعذر تحميل آراء القروب حالياً.</p>`;
     }
   });
+  loadArenaTournaments();
   try {
     const members = await fetchJson("/api/members");
     renderMembers(members);
