@@ -1,6 +1,10 @@
 node_modules
+platform/node_modules
+platform/.next
 .git
 .env
+.env.local
+platform/.env.local
 *.log
 scripts
 public/images/members/*-src.png
@@ -10,3 +14,4 @@ public/images/members/try*.png
 public/images/members/a.png
 public/images/members/preview*.png
 README.md
+agent-transcripts
