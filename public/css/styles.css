@@ -237,9 +237,10 @@ main,
   text-align: center;
   transform: translate(-50%, -50%);
   animation:
-    orbit-counter var(--dur, 22s) linear infinite,
-    orbit-fade var(--dur, 22s) linear infinite;
+    orbit-counter var(--dur, 28s) linear infinite,
+    orbit-fade var(--dur, 28s) linear infinite;
   animation-delay: var(--delay, 0s), var(--delay, 0s);
+  will-change: transform, opacity;
   box-shadow:
     0 12px 28px rgba(0, 0, 0, 0.4),
     0 0 0 1px rgba(166, 124, 82, 0.12);
@@ -271,21 +272,27 @@ main,
   }
 }
 
+/* يختفي تدريجيًا عند جهة العلم ثم يرجع يظهر ويكمل الدوران */
 @keyframes orbit-fade {
-  0%,
+  0% {
+    opacity: 0;
+  }
+  6% {
+    opacity: 0;
+  }
+  14% {
+    opacity: 1;
+  }
+  78% {
+    opacity: 1;
+  }
+  88% {
+    opacity: 0.35;
+  }
+  94% {
+    opacity: 0;
+  }
   100% {
-    opacity: 0;
-  }
-  12% {
-    opacity: 0;
-  }
-  20% {
-    opacity: 1;
-  }
-  76% {
-    opacity: 1;
-  }
-  86% {
     opacity: 0;
   }
 }
@@ -1620,9 +1627,9 @@ body.sheet-open {
   }
 
   .tuwaiq-flag {
+    --flag-lift: -1.9rem;
     width: 7.4rem;
     height: 12.5rem;
-    transform: translateX(-0.16rem) translateY(-1.8rem);
   }
 
   .float-chip {

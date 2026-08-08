@@ -477,9 +477,9 @@ function renderHeroFloatOpinions(opinions) {
 
   const radius = getOrbitRadius();
   const count = latest.length || 1;
+  const durSec = 28;
   heroFloatOpinions.innerHTML = latest
     .map((op, index) => {
-      const durSec = 22;
       const dur = `${durSec}s`;
       const delay = `${((-index / count) * durSec).toFixed(2)}s`;
       return `
