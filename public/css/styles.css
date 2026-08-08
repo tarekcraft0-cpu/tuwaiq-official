@@ -209,7 +209,7 @@ main,
   top: 50%;
   width: 0;
   height: 0;
-  animation: orbit-spin var(--dur, 22s) linear infinite;
+  animation: orbit-spin var(--dur, 28s) linear infinite;
   animation-delay: var(--delay, 0s);
 }
 
@@ -272,25 +272,25 @@ main,
   }
 }
 
-/* يختفي تدريجيًا عند جهة العلم ثم يرجع يظهر ويكمل الدوران */
+/* يختفي تدريجيًا عند جهة العلم ثم يرجع يظهر ويكمل الدوران بدون انقطاع */
 @keyframes orbit-fade {
   0% {
     opacity: 0;
   }
-  6% {
-    opacity: 0;
+  8% {
+    opacity: 0.25;
   }
-  14% {
+  16% {
     opacity: 1;
   }
-  78% {
+  76% {
     opacity: 1;
   }
-  88% {
-    opacity: 0.35;
+  84% {
+    opacity: 0.45;
   }
-  94% {
-    opacity: 0;
+  92% {
+    opacity: 0.1;
   }
   100% {
     opacity: 0;
