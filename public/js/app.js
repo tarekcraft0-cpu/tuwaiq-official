@@ -432,8 +432,138 @@ async function trackVisit() {
   }
 }
 
+const heroFloatOpinions = document.getElementById("hero-float-opinions");
+const groupOpinionsList = document.getElementById("group-opinions-list");
+const groupOpinionForm = document.getElementById("group-opinion-form");
+const groupFormError = document.getElementById("group-form-error");
+let groupOpinionsCache = [];
+
+const FLOAT_PATHS = [
+  { x1: "-9rem", y1: "-5.5rem", x2: "-10rem", y2: "1rem", x3: "-8rem", y3: "6rem" },
+  { x1: "8.5rem", y1: "-6rem", x2: "10rem", y2: "-1rem", x3: "9rem", y3: "5rem" },
+  { x1: "-7rem", y1: "7rem", x2: "-3rem", y2: "8.5rem", x3: "2rem", y3: "7.5rem" },
+  { x1: "7rem", y1: "6.5rem", x2: "3rem", y2: "8rem", x3: "-2rem", y3: "7rem" },
+  { x1: "-10rem", y1: "0", x2: "-9rem", y2: "-4rem", x3: "-7.5rem", y3: "3rem" },
+  { x1: "9.5rem", y1: "0.5rem", x2: "8rem", y2: "4.5rem", x3: "7rem", y3: "-3rem" },
+  { x1: "-2rem", y1: "-8rem", x2: "3rem", y2: "-7.5rem", x3: "6rem", y3: "-6rem" },
+  { x1: "1rem", y1: "8.5rem", x2: "-4rem", y2: "7.5rem", x3: "-7rem", y3: "5.5rem" },
+];
+
+function shortenOpinion(text, max = 34) {
+  const clean = String(text || "").replace(/\s+/g, " ").trim();
+  if (clean.length <= max) return clean;
+  return `${clean.slice(0, max - 1)}…`;
+}
+
+function renderGroupOpinionsList(opinions) {
+  if (!groupOpinionsList) return;
+  if (!opinions.length) {
+    groupOpinionsList.innerHTML =
+      `<p class="group-opinions-empty">ما فيه آراء عن القروب بعد. كن أول من يكتب.</p>`;
+    return;
+  }
+
+  groupOpinionsList.innerHTML = opinions
+    .map(
+      (op) => `
+      <article class="group-opinion-item">
+        <div class="group-opinion-top">
+          <span class="group-opinion-author">${escapeHtml(op.author || "زائر")}</span>
+          <time class="opinion-date" datetime="${escapeHtml(op.createdAt)}">${escapeHtml(
+            formatDate(op.createdAt)
+          )}</time>
+        </div>
+        <p class="group-opinion-text">${escapeHtml(op.text)}</p>
+      </article>
+    `
+    )
+    .join("");
+}
+
+function renderHeroFloatOpinions(opinions) {
+  if (!heroFloatOpinions) return;
+  const latest = opinions.slice(0, 8);
+  if (!latest.length) {
+    heroFloatOpinions.innerHTML = "";
+    return;
+  }
+
+  heroFloatOpinions.innerHTML = latest
+    .map((op, index) => {
+      const path = FLOAT_PATHS[index % FLOAT_PATHS.length];
+      const dur = `${12 + (index % 5) * 1.4}s`;
+      const delay = `${(index * 0.35).toFixed(2)}s`;
+      return `
+        <div
+          class="float-chip"
+          style="
+            --x1:${path.x1};--y1:${path.y1};
+            --x2:${path.x2};--y2:${path.y2};
+            --x3:${path.x3};--y3:${path.y3};
+            --dur:${dur};--delay:${delay};
+          "
+        >
+          <span>${escapeHtml(shortenOpinion(op.text))}</span>
+        </div>
+      `;
+    })
+    .join("");
+}
+
+function renderGroupOpinions(opinions) {
+  groupOpinionsCache = Array.isArray(opinions) ? opinions : [];
+  renderHeroFloatOpinions(groupOpinionsCache);
+  renderGroupOpinionsList(groupOpinionsCache);
+}
+
+async function loadGroupOpinions() {
+  const opinions = await fetchJson("/api/group-opinions");
+  renderGroupOpinions(opinions);
+}
+
+if (groupOpinionForm) {
+  groupOpinionForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const submitBtn = document.getElementById("submit-group-opinion");
+    if (groupFormError) {
+      groupFormError.hidden = true;
+      groupFormError.textContent = "";
+    }
+
+    const data = new FormData(groupOpinionForm);
+    const payload = {
+      author: String(data.get("author") || "").trim() || "زائر",
+      text: String(data.get("text") || "").trim(),
+    };
+
+    if (submitBtn) submitBtn.disabled = true;
+    try {
+      const created = await fetchJson("/api/group-opinions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      renderGroupOpinions([created, ...groupOpinionsCache]);
+      groupOpinionForm.reset();
+    } catch (err) {
+      if (groupFormError) {
+        groupFormError.textContent = err.message;
+        groupFormError.hidden = false;
+      }
+    } finally {
+      if (submitBtn) submitBtn.disabled = false;
+    }
+  });
+}
+
 async function init() {
   trackVisit();
+  loadGroupOpinions().catch(() => {
+    if (groupOpinionsList) {
+      groupOpinionsList.innerHTML =
+        `<p class="group-opinions-empty">تعذر تحميل آراء القروب حالياً.</p>`;
+    }
+  });
   try {
     const members = await fetchJson("/api/members");
     renderMembers(members);
@@ -453,10 +583,14 @@ setInterval(async () => {
     return;
   }
   try {
-    const members = await fetchJson("/api/members");
+    const [members, groupOpinions] = await Promise.all([
+      fetchJson("/api/members"),
+      fetchJson("/api/group-opinions"),
+    ]);
     members.forEach((m) => {
       updateOpinionPanel(m.id, m.opinions || []);
     });
+    renderGroupOpinions(groupOpinions);
   } catch {
     // تجاهل فشل التحديث التلقائي
   }

@@ -36,6 +36,7 @@
         طويق
       </a>
       <nav class="nav">
+        <a href="#group-opinions">رأيك في طويق</a>
         <a href="#members">الأعضاء</a>
         <a href="#about">عن الموقع</a>
       </nav>
@@ -44,13 +45,16 @@
     <main id="top">
       <section class="hero">
         <div class="hero-copy">
-          <div class="hero-logo reveal">
-            <img
-              src="/images/tuwaiq-logo.png"
-              alt="شعار قروب طويق"
-              width="320"
-              height="320"
-            />
+          <div class="hero-stage reveal">
+            <div id="hero-float-opinions" class="hero-float-opinions" aria-hidden="true"></div>
+            <div class="hero-logo">
+              <img
+                src="/images/tuwaiq-logo.png"
+                alt="شعار قروب طويق"
+                width="320"
+                height="320"
+              />
+            </div>
           </div>
           <div class="visit-badge reveal delay-1" aria-live="polite">
             <span class="visit-badge-label">زيارات الموقع</span>
@@ -59,19 +63,58 @@
           <h1 class="reveal delay-2">سجل أعضاء القروب</h1>
           <p class="hero-lead reveal delay-3">
             منصة رسمية لأعضاء قروب طويق: تعرّف على وضع كل شخص وسيرته، وشارك رأيك في
-            مصداقية ما يُقال عنه.
+            القروب وفي مصداقية ما يُقال عن الأعضاء.
           </p>
           <div class="hero-actions reveal delay-3">
-            <a class="btn btn-primary" href="#members">تصفح الأعضاء</a>
+            <a class="btn btn-primary" href="#group-opinions">اكتب رأيك في طويق</a>
+            <a class="btn btn-outline" href="#members">تصفح الأعضاء</a>
           </div>
         </div>
+      </section>
+
+      <section id="group-opinions" class="group-opinions">
+        <div class="section-head">
+          <h2>رأيك في قروب طويق</h2>
+          <p class="section-sub">
+            اكتب رأيك العام عن القروب. اللي ينكتب يطير حول الشعار فوق، وهنا تقدر تقراه بهدوء
+          </p>
+        </div>
+
+        <form id="group-opinion-form" class="group-opinion-form">
+          <label class="field">
+            <span>اسمك (اختياري)</span>
+            <input
+              type="text"
+              name="author"
+              maxlength="40"
+              placeholder="زائر"
+              autocomplete="nickname"
+            />
+          </label>
+          <label class="field">
+            <span>رأيك في القروب</span>
+            <textarea
+              name="text"
+              rows="3"
+              maxlength="280"
+              required
+              placeholder="وش رأيك في قروب طويق بشكل عام؟"
+            ></textarea>
+          </label>
+          <p id="group-form-error" class="form-error" hidden></p>
+          <button type="submit" class="btn btn-primary" id="submit-group-opinion">
+            انشر رأيك
+          </button>
+        </form>
+
+        <div id="group-opinions-list" class="group-opinions-list" aria-live="polite"></div>
       </section>
 
       <section id="about" class="about">
         <h2>عن الموقع</h2>
         <p>
           هذا الموقع مخصص لقروب طويق فقط. يعرض حسابات الأعضاء مع سيرهم داخل القروب،
-          ويتيح لأي زائر كتابة رأي حول ما إذا كان الكلام المنسوب للشخص حقيقياً أم لا.
+          ويتيح لأي زائر كتابة رأي حول القروب أو حول ما إذا كان الكلام المنسوب للشخص حقيقياً أم لا.
         </p>
       </section>
 

@@ -36,6 +36,9 @@ function ensureSiteStats(db) {
   if (!Number.isFinite(db.site.visitCount) || db.site.visitCount < VISIT_BASELINE) {
     db.site.visitCount = VISIT_BASELINE;
   }
+  if (!Array.isArray(db.groupOpinions)) {
+    db.groupOpinions = [];
+  }
   return db;
 }
 
@@ -155,6 +158,57 @@ app.post("/api/visits", (_req, res) => {
   db.site.visitCount = (db.site.visitCount || 0) + 1;
   writeDb(db);
   res.json({ count: db.site.visitCount });
+});
+
+app.get("/api/group-opinions", (_req, res) => {
+  const db = ensureSiteStats(readDb());
+  const opinions = (db.groupOpinions || [])
+    .slice()
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  res.json(opinions);
+});
+
+app.post("/api/group-opinions", (req, res) => {
+  const { author, text } = req.body || {};
+  const cleanText = String(text || "").trim();
+  const cleanAuthor = String(author || "زائر").trim().slice(0, 40) || "زائر";
+
+  if (!cleanText || cleanText.length < 3) {
+    return res.status(400).json({ error: "اكتب رأيك (٣ أحرف على الأقل)" });
+  }
+  if (cleanText.length > 280) {
+    return res.status(400).json({ error: "الرأي طويل جداً (حد أقصى ٢٨٠ حرف)" });
+  }
+
+  const db = ensureSiteStats(readDb());
+  const opinion = {
+    id: randomUUID(),
+    author: cleanAuthor,
+    text: cleanText,
+    createdAt: new Date().toISOString(),
+  };
+
+  db.groupOpinions.push(opinion);
+  writeDb(db);
+
+  const saved = ensureSiteStats(readDb());
+  const savedOpinion = (saved.groupOpinions || []).find((o) => o.id === opinion.id);
+  if (!savedOpinion) {
+    return res.status(500).json({ error: "فشل حفظ الرأي، حاول مرة ثانية" });
+  }
+
+  res.status(201).json(opinion);
+});
+
+app.delete("/api/group-opinions/:opinionId", requireAdmin, (req, res) => {
+  const db = ensureSiteStats(readDb());
+  const before = db.groupOpinions.length;
+  db.groupOpinions = db.groupOpinions.filter((o) => o.id !== req.params.opinionId);
+  if (db.groupOpinions.length === before) {
+    return res.status(404).json({ error: "الرأي غير موجود" });
+  }
+  writeDb(db);
+  res.json({ ok: true });
 });
 
 app.get("/api/members", (_req, res) => {
