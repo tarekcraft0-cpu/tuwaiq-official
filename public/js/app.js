@@ -1,4 +1,5 @@
-const membersList = document.getElementById("members-list");
+const membersGrid = document.getElementById("members-grid");
+const membersOpinions = document.getElementById("members-opinions");
 const emptyState = document.getElementById("empty-state");
 const memberCount = document.getElementById("member-count");
 const dialog = document.getElementById("opinion-dialog");
@@ -95,19 +96,44 @@ function renderOpinions(opinions) {
 }
 
 function updateOpinionPanel(memberId, opinions) {
-  const slot = membersList.querySelector(`[data-opinions-for="${memberId}"]`);
-  const article = membersList.querySelector(`.member-card[data-id="${memberId}"]`);
+  const slot = membersOpinions.querySelector(`[data-opinions-for="${memberId}"]`);
+  const article = membersOpinions.querySelector(`.member-card[data-id="${memberId}"]`);
   const heading = article?.querySelector(".opinion-head h4");
+  const tileCount = membersGrid.querySelector(
+    `.member-tile[data-id="${memberId}"] .member-tile-count`
+  );
   const list = Array.isArray(opinions) ? opinions : [];
 
   if (slot) slot.innerHTML = renderOpinions(list);
   if (heading) heading.textContent = `آراء الجميع (${list.length}) — ظاهرة للكل`;
+  if (tileCount) {
+    tileCount.textContent =
+      list.length > 0 ? `${list.length} رأي` : "لا آراء بعد";
+  }
 
   const cached = membersCache.find((m) => m.id === memberId);
   if (cached) {
     cached.opinions = list;
     cached.opinionCount = list.length;
   }
+}
+
+function goToMemberOpinions(memberId) {
+  const target = document.getElementById(`opinions-${memberId}`);
+  if (!target) return;
+
+  membersOpinions
+    .querySelectorAll(".member-card.is-focused")
+    .forEach((el) => el.classList.remove("is-focused"));
+  membersGrid
+    .querySelectorAll(".member-tile.is-active")
+    .forEach((el) => el.classList.remove("is-active"));
+
+  target.classList.add("is-focused");
+  const tile = membersGrid.querySelector(`.member-tile[data-id="${memberId}"]`);
+  if (tile) tile.classList.add("is-active");
+
+  target.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 function openBioSheet(memberId) {
@@ -154,11 +180,87 @@ function closeBioSheet() {
   }, 320);
 }
 
+function chunkMembers(members, size = 3) {
+  const rows = [];
+  for (let i = 0; i < members.length; i += size) {
+    rows.push(members.slice(i, i + size));
+  }
+  return rows;
+}
+
+function renderMemberTile(m, index) {
+  const count = m.opinionCount || 0;
+  return `
+    <button
+      type="button"
+      class="member-tile"
+      data-id="${escapeHtml(m.id)}"
+      style="animation-delay: ${Math.min(index * 0.05, 0.35)}s"
+    >
+      <div class="avatar-ring member-tile-avatar">
+        <div class="avatar">${renderAvatar(m)}</div>
+      </div>
+      <h3>${escapeHtml(m.displayName)}</h3>
+      <p class="username">${m.flag ? `<span class="flag">${escapeHtml(m.flag)}</span> ` : ""}@${escapeHtml(m.username)}</p>
+      ${m.role ? `<span class="member-tile-role">${escapeHtml(m.role)}</span>` : ""}
+      <span class="member-tile-count">${count > 0 ? `${count} رأي` : "لا آراء بعد"}</span>
+      <span class="member-tile-hint">اضغط لعرض الآراء</span>
+    </button>
+  `;
+}
+
+function renderOpinionCard(m, index) {
+  return `
+    <article
+      class="member-card"
+      id="opinions-${escapeHtml(m.id)}"
+      style="animation-delay: ${Math.min(index * 0.04, 0.3)}s"
+      data-id="${escapeHtml(m.id)}"
+    >
+      <div class="member-profile">
+        <div class="avatar-ring">
+          <div class="avatar">${renderAvatar(m)}</div>
+        </div>
+        <div class="member-meta">
+          <h3>${escapeHtml(m.displayName)}</h3>
+          <p class="username">${m.flag ? `<span class="flag">${escapeHtml(m.flag)}</span> ` : ""}@${escapeHtml(m.username)}</p>
+          ${
+            m.bio
+              ? `<button type="button" class="bio-trigger open-bio" data-id="${escapeHtml(m.id)}">
+                  <span class="bio-trigger-label">${escapeHtml(m.role || "عرض السيرة")}</span>
+                  <span class="bio-trigger-hint">اضغط لعرض السيرة</span>
+                  <span class="bio-trigger-arrow" aria-hidden="true">↗</span>
+                </button>`
+              : m.role
+                ? `<span class="bio-trigger bio-trigger-static"><span class="bio-trigger-label">${escapeHtml(m.role)}</span></span>`
+                : ""
+          }
+        </div>
+      </div>
+      <div class="opinion-panel">
+        <div class="opinion-head">
+          <div>
+            <h4>آراء الجميع (${m.opinionCount || 0}) — ظاهرة للكل</h4>
+            <p class="opinion-public-note">أي زائر يكتب، والكل يشوف اللي انكتب</p>
+          </div>
+          <button type="button" class="btn btn-outline write-opinion" data-id="${escapeHtml(m.id)}">
+            اكتب رأيك
+          </button>
+        </div>
+        <div class="opinions-slot" data-opinions-for="${escapeHtml(m.id)}">
+          ${renderOpinions(m.opinions || [])}
+        </div>
+      </div>
+    </article>
+  `;
+}
+
 function renderMembers(members) {
   membersCache = members;
 
   if (!members.length) {
-    membersList.innerHTML = "";
+    membersGrid.innerHTML = "";
+    membersOpinions.innerHTML = "";
     emptyState.hidden = false;
     memberCount.hidden = true;
     return;
@@ -168,54 +270,34 @@ function renderMembers(members) {
   memberCount.hidden = false;
   memberCount.textContent = `${members.length} عضو في السجل`;
 
-  membersList.innerHTML = members
+  const rows = chunkMembers(members, 3);
+  membersGrid.innerHTML = rows
     .map(
-      (m, index) => `
-      <article class="member-card" style="animation-delay: ${Math.min(index * 0.06, 0.4)}s" data-id="${escapeHtml(m.id)}">
-        <div class="member-profile">
-          <div class="avatar-ring">
-            <div class="avatar">${renderAvatar(m)}</div>
-          </div>
-          <div class="member-meta">
-            <h3>${escapeHtml(m.displayName)}</h3>
-            <p class="username">${m.flag ? `<span class="flag">${escapeHtml(m.flag)}</span> ` : ""}@${escapeHtml(m.username)}</p>
-            ${
-              m.bio
-                ? `<button type="button" class="bio-trigger open-bio" data-id="${escapeHtml(m.id)}">
-                    <span class="bio-trigger-label">${escapeHtml(m.role || "عرض السيرة")}</span>
-                    <span class="bio-trigger-hint">اضغط لعرض السيرة</span>
-                    <span class="bio-trigger-arrow" aria-hidden="true">↗</span>
-                  </button>`
-                : m.role
-                  ? `<span class="bio-trigger bio-trigger-static"><span class="bio-trigger-label">${escapeHtml(m.role)}</span></span>`
-                  : ""
-            }
-          </div>
-        </div>
-        <div class="opinion-panel">
-          <div class="opinion-head">
-            <div>
-              <h4>آراء الجميع (${m.opinionCount || 0}) — ظاهرة للكل</h4>
-              <p class="opinion-public-note">أي زائر يكتب، والكل يشوف اللي انكتب</p>
-            </div>
-            <button type="button" class="btn btn-outline write-opinion" data-id="${escapeHtml(m.id)}">
-              اكتب رأيك
-            </button>
-          </div>
-          <div class="opinions-slot" data-opinions-for="${escapeHtml(m.id)}">
-            ${renderOpinions(m.opinions || [])}
-          </div>
-        </div>
-      </article>
+      (row, rowIndex) => `
+      <div class="members-row">
+        ${row.map((m, i) => renderMemberTile(m, rowIndex * 3 + i)).join("")}
+      </div>
     `
     )
     .join("");
 
-  membersList.querySelectorAll(".open-bio").forEach((btn) => {
+  membersOpinions.innerHTML = `
+    <div class="opinions-section-head">
+      <h3>آراء الأعضاء</h3>
+      <p>اختر عضو من القائمة فوق، أو مرّ هنا مباشرة</p>
+    </div>
+    ${members.map((m, index) => renderOpinionCard(m, index)).join("")}
+  `;
+
+  membersGrid.querySelectorAll(".member-tile").forEach((tile) => {
+    tile.addEventListener("click", () => goToMemberOpinions(tile.dataset.id));
+  });
+
+  membersOpinions.querySelectorAll(".open-bio").forEach((btn) => {
     btn.addEventListener("click", () => openBioSheet(btn.dataset.id));
   });
 
-  membersList.querySelectorAll(".write-opinion").forEach((btn) => {
+  membersOpinions.querySelectorAll(".write-opinion").forEach((btn) => {
     btn.addEventListener("click", () => openOpinionDialog(btn.dataset.id));
   });
 }
@@ -225,7 +307,7 @@ async function loadOpinions(memberId) {
     const member = await fetchJson(`/api/members/${memberId}`);
     updateOpinionPanel(memberId, member.opinions || []);
   } catch {
-    const slot = membersList.querySelector(`[data-opinions-for="${memberId}"]`);
+    const slot = membersOpinions.querySelector(`[data-opinions-for="${memberId}"]`);
     if (slot) slot.innerHTML = `<p class="no-opinions">تعذر تحميل الآراء.</p>`;
   }
 }
