@@ -566,8 +566,64 @@ if (groupOpinionForm) {
   });
 }
 
+function formatMediaTime(seconds) {
+  if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
+  const total = Math.floor(seconds);
+  const m = Math.floor(total / 60);
+  const s = String(total % 60).padStart(2, "0");
+  return `${m}:${s}`;
+}
+
+function setupAnthemPlayer() {
+  const toggle = document.getElementById("anthem-toggle");
+  const media = document.getElementById("anthem-media");
+  const timeEl = document.getElementById("anthem-time");
+  if (!toggle || !media || !timeEl) return;
+
+  const playIcon = toggle.querySelector(".icon-play");
+  const pauseIcon = toggle.querySelector(".icon-pause");
+
+  const syncUi = () => {
+    const playing = !media.paused && !media.ended;
+    toggle.classList.toggle("is-playing", playing);
+    toggle.setAttribute("aria-pressed", playing ? "true" : "false");
+    if (playIcon) playIcon.hidden = playing;
+    if (pauseIcon) pauseIcon.hidden = !playing;
+    if (playing) {
+      timeEl.textContent = formatMediaTime(media.currentTime);
+    } else if (Number.isFinite(media.duration) && media.duration > 0) {
+      timeEl.textContent = formatMediaTime(media.duration);
+    }
+  };
+
+  media.addEventListener("loadedmetadata", syncUi);
+  media.addEventListener("timeupdate", syncUi);
+  media.addEventListener("play", syncUi);
+  media.addEventListener("pause", syncUi);
+  media.addEventListener("ended", () => {
+    media.currentTime = 0;
+    syncUi();
+  });
+
+  toggle.addEventListener("click", async () => {
+    try {
+      if (media.paused) {
+        await media.play();
+      } else {
+        media.pause();
+      }
+    } catch {
+      // تجاهل منع التشغيل التلقائي من المتصفح
+    }
+    syncUi();
+  });
+
+  syncUi();
+}
+
 async function init() {
   trackVisit();
+  setupAnthemPlayer();
   loadGroupOpinions().catch(() => {
     if (groupOpinionsList) {
       groupOpinionsList.innerHTML =

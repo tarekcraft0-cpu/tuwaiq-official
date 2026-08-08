@@ -279,11 +279,18 @@ main,
   }
 }
 
-.hero-logo {
+.hero-emblem {
   position: relative;
   z-index: 1;
   width: clamp(10.5rem, 30vw, 16.5rem);
   height: clamp(10.5rem, 30vw, 16.5rem);
+}
+
+.hero-logo {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
   margin: 0;
   border-radius: 50%;
   padding: 5px;
@@ -298,6 +305,234 @@ main,
     0 20px 55px rgba(0, 0, 0, 0.45),
     0 0 70px rgba(166, 124, 82, 0.18);
   animation: logo-glow 4.5s ease-in-out infinite alternate;
+}
+
+.tuwaiq-flag {
+  position: absolute;
+  inset-inline-start: calc(100% - 0.55rem);
+  bottom: 58%;
+  z-index: 4;
+  width: 4.6rem;
+  height: 7.2rem;
+  pointer-events: none;
+  transform-origin: bottom center;
+  animation: flag-rise 1.15s cubic-bezier(0.2, 0.85, 0.25, 1) both;
+}
+
+.tuwaiq-flag-pole {
+  position: absolute;
+  inset-inline-start: 0.15rem;
+  bottom: 0;
+  width: 0.18rem;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #e8d3b5, #8a6644 55%, #5c4030);
+  box-shadow: 0 0 10px rgba(166, 124, 82, 0.35);
+}
+
+.tuwaiq-flag-cloth {
+  position: absolute;
+  inset-inline-start: 0.28rem;
+  top: 0.15rem;
+  width: 3.9rem;
+  height: 2.7rem;
+  border-radius: 0.25rem 0.7rem 0.7rem 0.25rem;
+  overflow: hidden;
+  transform-origin: right center;
+  background:
+    linear-gradient(135deg, rgba(58, 38, 30, 0.95), rgba(26, 16, 13, 0.98));
+  border: 1px solid rgba(210, 180, 140, 0.4);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.35);
+  animation: flag-wave 2.4s ease-in-out infinite;
+}
+
+.tuwaiq-flag-cloth img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: saturate(1.05) contrast(1.05);
+}
+
+@keyframes flag-rise {
+  from {
+    opacity: 0;
+    transform: translateY(1.4rem) scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes flag-wave {
+  0%,
+  100% {
+    transform: perspective(220px) rotateY(0deg) skewY(0deg) translateX(0);
+  }
+  25% {
+    transform: perspective(220px) rotateY(-14deg) skewY(2deg) translateX(1px);
+  }
+  50% {
+    transform: perspective(220px) rotateY(-6deg) skewY(-1deg) translateX(2px);
+  }
+  75% {
+    transform: perspective(220px) rotateY(-16deg) skewY(2.5deg) translateX(1px);
+  }
+}
+
+.anthem-block {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 0.7rem;
+  width: min(100%, 22rem);
+  margin: 1.35rem 0 1.5rem;
+}
+
+.anthem-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 2.6vw, 1.25rem);
+  font-weight: 700;
+  color: var(--copper-bright);
+  letter-spacing: 0.01em;
+  text-shadow: 0 0 22px rgba(210, 180, 140, 0.22);
+}
+
+.voice-note {
+  appearance: none;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  margin: 0;
+  padding: 0.75rem 0.95rem;
+  border: 1px solid rgba(210, 180, 140, 0.32);
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(58, 38, 30, 0.92), rgba(22, 14, 11, 0.9));
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(242, 232, 220, 0.08);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.voice-note:hover,
+.voice-note:focus-visible {
+  outline: none;
+  transform: translateY(-2px);
+  border-color: rgba(210, 180, 140, 0.5);
+  box-shadow:
+    0 16px 34px rgba(0, 0, 0, 0.34),
+    0 0 0 1px rgba(166, 124, 82, 0.18);
+}
+
+.voice-note-play {
+  width: 2.2rem;
+  height: 2.2rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: linear-gradient(145deg, var(--copper-bright), var(--copper-deep));
+  color: #1a100d;
+  flex-shrink: 0;
+}
+
+.voice-note-wave {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.18rem;
+  height: 1.5rem;
+  min-width: 0;
+}
+
+.voice-note-wave i {
+  display: block;
+  width: 0.16rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: rgba(210, 180, 140, 0.55);
+  transform-origin: center;
+}
+
+.voice-note-wave i:nth-child(odd) {
+  height: 0.7rem;
+}
+
+.voice-note-wave i:nth-child(3n) {
+  height: 1.05rem;
+}
+
+.voice-note.is-playing .voice-note-wave i {
+  animation: wave-pulse 0.9s ease-in-out infinite;
+}
+
+.voice-note.is-playing .voice-note-wave i:nth-child(2) {
+  animation-delay: 0.08s;
+}
+.voice-note.is-playing .voice-note-wave i:nth-child(3) {
+  animation-delay: 0.16s;
+}
+.voice-note.is-playing .voice-note-wave i:nth-child(4) {
+  animation-delay: 0.24s;
+}
+.voice-note.is-playing .voice-note-wave i:nth-child(5) {
+  animation-delay: 0.05s;
+}
+.voice-note.is-playing .voice-note-wave i:nth-child(6) {
+  animation-delay: 0.18s;
+}
+.voice-note.is-playing .voice-note-wave i:nth-child(7) {
+  animation-delay: 0.28s;
+}
+.voice-note.is-playing .voice-note-wave i:nth-child(8) {
+  animation-delay: 0.12s;
+}
+.voice-note.is-playing .voice-note-wave i:nth-child(9) {
+  animation-delay: 0.22s;
+}
+.voice-note.is-playing .voice-note-wave i:nth-child(10) {
+  animation-delay: 0.1s;
+}
+.voice-note.is-playing .voice-note-wave i:nth-child(11) {
+  animation-delay: 0.2s;
+}
+.voice-note.is-playing .voice-note-wave i:nth-child(12) {
+  animation-delay: 0.3s;
+}
+
+@keyframes wave-pulse {
+  0%,
+  100% {
+    transform: scaleY(0.55);
+    background: rgba(210, 180, 140, 0.45);
+  }
+  50% {
+    transform: scaleY(1.35);
+    background: var(--copper-bright);
+  }
+}
+
+.voice-note-time {
+  font-size: 0.82rem;
+  color: var(--ink-mute);
+  font-variant-numeric: tabular-nums;
+  min-width: 2.4rem;
+  text-align: left;
+  direction: ltr;
+}
+
+.anthem-media {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .visit-badge {
@@ -1361,6 +1596,22 @@ body.sheet-open {
     padding: 0.55rem 0.7rem;
   }
 
+  .tuwaiq-flag {
+    width: 3.6rem;
+    height: 5.8rem;
+    inset-inline-start: calc(100% - 0.7rem);
+  }
+
+  .tuwaiq-flag-cloth {
+    width: 3rem;
+    height: 2.15rem;
+  }
+
+  .anthem-block {
+    width: min(100%, 19.5rem);
+    margin-top: 1.1rem;
+  }
+
   .hero-actions {
     flex-wrap: wrap;
   }
@@ -1374,6 +1625,9 @@ body.sheet-open {
   .ridge,
   .dust,
   .hero-logo,
+  .tuwaiq-flag,
+  .tuwaiq-flag-cloth,
+  .voice-note-wave i,
   .bio-sheet,
   .bio-backdrop {
     animation: none !important;
