@@ -21,7 +21,7 @@ import { isStaff, roleLabel } from "@/lib/roles";
 import { cn } from "@/lib/utils";
 
 const links = [
-  { href: "/", label: "الرئيسية", hard: true },
+  { href: "/", label: "بيت", hard: true },
   { href: "/#members", label: "الأعضاء", hard: true },
   { href: "/hub", label: "البطولات" },
   { href: "/join", label: "تسجيل" },

@@ -12,10 +12,10 @@ import {
 import { cn } from "@/lib/utils";
 
 const items = [
-  { href: "/", label: "الرئيسية", icon: Home, hard: true },
-  { href: "/hub", label: "البطولات", icon: Trophy },
-  { href: "/players", label: "اللاعبون", icon: Users },
-  { href: "/votes", label: "التصويت", icon: Vote },
+  { href: "/", label: "بيت", icon: Home, hard: true },
+  { href: "/hub", label: "بطولات", icon: Trophy },
+  { href: "/players", label: "لاعبون", icon: Users },
+  { href: "/votes", label: "تصويت", icon: Vote },
   { href: "/more", label: "المزيد", icon: MoreHorizontal },
 ] as const;
 
