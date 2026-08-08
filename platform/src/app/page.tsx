@@ -1,6 +1,14 @@
-import { redirect } from "next/navigation";
+"use client";
 
-/** واجهة طويق الرئيسية تُخدم من Express على /. منصة البطولات على /hub */
-export default function PlatformIndexPage() {
-  redirect("/hub");
+import { PlatformHomeSections } from "@/components/home/PlatformHomeSections";
+import { TuwaiqEmbed } from "@/components/home/TuwaiqEmbed";
+
+/** صفحة واحدةحدة: واجهة طويق + البطولات معاً */
+export default function UnifiedHomePage() {
+  return (
+    <div className="-mt-2">
+      <TuwaiqEmbed />
+      <PlatformHomeSections />
+    </div>
+  );
 }

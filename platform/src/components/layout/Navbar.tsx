@@ -22,14 +22,14 @@ import { cn } from "@/lib/utils";
 
 const links = [
   { href: "/", label: "الرئيسية" },
-  { href: "/hub", label: "المنصة" },
-  { href: "/tournaments", label: "البطولات" },
+  { href: "/#members", label: "الأعضاء" },
+  { href: "/#arena", label: "البطولات" },
   { href: "/join", label: "تسجيل" },
   { href: "/rankings", label: "الترتيب" },
   { href: "/players", label: "اللاعبون" },
   { href: "/shop", label: "المتجر" },
   { href: "/votes", label: "التصويت" },
-  { href: "/news", label: "الأخبار" },
+  { href: "/more", label: "المزيد" },
 ];
 
 export function Navbar() {
@@ -100,7 +100,7 @@ export function Navbar() {
             <div className="font-[family-name:var(--font-display)] text-xl font-bold tracking-wide gold-text">
               طويق
             </div>
-            <div className="text-[11px] text-[var(--muted)]">بطولات قروب طويق</div>
+            <div className="text-[11px] text-[var(--muted)]">قروب طويق — مكان واحد</div>
           </div>
         </Link>
 

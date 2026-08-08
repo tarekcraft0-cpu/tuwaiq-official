@@ -12,8 +12,8 @@ import {
 import { cn } from "@/lib/utils";
 
 const items = [
-  { href: "/", label: "طويق", icon: Home },
-  { href: "/hub", label: "المنصة", icon: Trophy },
+  { href: "/", label: "الرئيسية", icon: Home },
+  { href: "/#arena", label: "البطولات", icon: Trophy },
   { href: "/players", label: "اللاعبون", icon: Users },
   { href: "/votes", label: "التصويت", icon: Vote },
   { href: "/more", label: "المزيد", icon: MoreHorizontal },

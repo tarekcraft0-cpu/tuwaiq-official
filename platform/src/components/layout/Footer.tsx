@@ -60,12 +60,12 @@ export function Footer() {
           <p className="mb-3 text-sm font-bold">استكشف</p>
           <div className="flex flex-col gap-2 text-sm text-[var(--muted)]">
             <Link href="/" className="hover:text-[var(--gold-soft)]">
-              واجهة طويق
+              الرئيسية
             </Link>
-            <Link href="/hub" className="hover:text-[var(--gold-soft)]">
-              منصة البطولات
+            <Link href="/#members" className="hover:text-[var(--gold-soft)]">
+              الأعضاء
             </Link>
-            <Link href="/tournaments" className="hover:text-[var(--gold-soft)]">
+            <Link href="/#arena" className="hover:text-[var(--gold-soft)]">
               البطولات
             </Link>
             <Link href="/rankings" className="hover:text-[var(--gold-soft)]">

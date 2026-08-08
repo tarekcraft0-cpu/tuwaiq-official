@@ -20,10 +20,14 @@ export function AppShell({ children }: { children: ReactNode }) {
     );
   }
 
+  const isHome = pathname === "/";
+
   return (
     <>
       <Navbar />
-      <main className="flex-1 page-pad">{children}</main>
+      <main className={`flex-1 ${isHome ? "pb-24 lg:pb-10" : "page-pad"}`}>
+        {children}
+      </main>
       <Footer />
       <MobileNav />
     </>
