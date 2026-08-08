@@ -65,9 +65,9 @@ export function Footer() {
             <a href="/#members" className="hover:text-[var(--gold-soft)]">
               الأعضاء
             </a>
-            <a href="/#arena" className="hover:text-[var(--gold-soft)]">
+            <Link href="/hub" className="hover:text-[var(--gold-soft)]">
               البطولات
-            </a>
+            </Link>
             <Link href="/rankings" className="hover:text-[var(--gold-soft)]">
               أفضل 100 لاعب
             </Link>

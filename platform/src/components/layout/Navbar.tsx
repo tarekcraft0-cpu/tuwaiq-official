@@ -23,7 +23,7 @@ import { cn } from "@/lib/utils";
 const links = [
   { href: "/", label: "الرئيسية", hard: true },
   { href: "/#members", label: "الأعضاء", hard: true },
-  { href: "/#arena", label: "البطولات", hard: true },
+  { href: "/hub", label: "البطولات" },
   { href: "/join", label: "تسجيل" },
   { href: "/rankings", label: "الترتيب" },
   { href: "/players", label: "اللاعبون" },

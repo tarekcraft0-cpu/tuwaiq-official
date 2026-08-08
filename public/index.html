@@ -35,14 +35,12 @@
         />
         طويق
       </a>
-      <nav class="nav">
+      <nav class="nav" aria-label="روابط سريعة">
         <a href="#group-opinions">رأيك</a>
         <a href="#members">الأعضاء</a>
-        <a href="#arena">البطولات</a>
+        <a href="/hub">البطولات</a>
         <a href="/join">تسجيل</a>
-        <a href="/rankings">الترتيب</a>
-        <a href="/players">اللاعبون</a>
-        <a href="/shop">المتجر</a>
+        <a href="/rankings">ترتيب</a>
         <a href="/more">المزيد</a>
       </nav>
     </header>
@@ -133,7 +131,7 @@
           <div class="hero-actions reveal delay-3">
             <a class="btn btn-primary" href="#group-opinions">اكتب رأيك في طويق</a>
             <a class="btn btn-outline" href="#members">آراء الأعضاء</a>
-            <a class="btn btn-outline" href="#arena">البطولات</a>
+            <a class="btn btn-outline" href="/hub">البطولات</a>
           </div>
         </div>
       </section>
@@ -201,25 +199,30 @@
         <div id="members-opinions" class="members-opinions" aria-live="polite"></div>
       </section>
 
-      <section id="arena" class="about">
+      <section id="arena" class="about arena-section">
         <div class="section-head">
           <h2>بطولات طويق</h2>
           <p class="section-sub">
-            التسجيل والشجرة والترتيب والمتجر والتصويت — من نفس الموقع.
+            كل مزايا البطولات: تسجيل، شجرة، ترتيب، متجر، تصويت، أخبار، لوحة شرف،
+            تقويم، قوانين، وإدارة.
           </p>
         </div>
-        <div class="hero-actions" style="margin-top: 1rem">
-          <a class="btn btn-primary" href="/tournaments">البطولات</a>
+        <div class="hero-actions arena-actions">
+          <a class="btn btn-primary" href="/hub">فتح صفحة البطولات</a>
           <a class="btn btn-outline" href="/join">التسجيل</a>
+          <a class="btn btn-outline" href="/tournaments">كل البطولات</a>
           <a class="btn btn-outline" href="/rankings">الترتيب</a>
           <a class="btn btn-outline" href="/players">اللاعبون</a>
           <a class="btn btn-outline" href="/votes">التصويت</a>
           <a class="btn btn-outline" href="/news">الأخبار</a>
           <a class="btn btn-outline" href="/shop">المتجر</a>
           <a class="btn btn-outline" href="/hall-of-fame">لوحة الشرف</a>
+          <a class="btn btn-outline" href="/h2h">مواجهات</a>
           <a class="btn btn-outline" href="/calendar">التقويم</a>
           <a class="btn btn-outline" href="/rules">القوانين</a>
+          <a class="btn btn-outline" href="/prizes">الجوائز</a>
           <a class="btn btn-outline" href="/login">دخول</a>
+          <a class="btn btn-outline" href="/admin">الإدارة</a>
         </div>
         <div id="arena-tournaments" class="arena-tournaments" aria-live="polite"></div>
       </section>
@@ -228,6 +231,29 @@
     <footer class="footer">
       <p><span class="footer-brand">طويق</span> — موقع رسمي مستقل لقروب طويق</p>
     </footer>
+
+    <nav class="dock" aria-label="القائمة الرئيسية">
+      <a class="dock-item is-active" href="/">
+        <span class="dock-icon" aria-hidden="true">⌂</span>
+        <span>الرئيسية</span>
+      </a>
+      <a class="dock-item" href="/hub">
+        <span class="dock-icon" aria-hidden="true">◆</span>
+        <span>البطولات</span>
+      </a>
+      <a class="dock-item" href="/players">
+        <span class="dock-icon" aria-hidden="true">◎</span>
+        <span>اللاعبون</span>
+      </a>
+      <a class="dock-item" href="/votes">
+        <span class="dock-icon" aria-hidden="true">◍</span>
+        <span>التصويت</span>
+      </a>
+      <a class="dock-item" href="/more">
+        <span class="dock-icon" aria-hidden="true">☰</span>
+        <span>المزيد</span>
+      </a>
+    </nav>
 
     <div id="bio-backdrop" class="bio-backdrop" hidden></div>
     <aside id="bio-sheet" class="bio-sheet" hidden aria-modal="true" role="dialog" aria-labelledby="bio-sheet-name">

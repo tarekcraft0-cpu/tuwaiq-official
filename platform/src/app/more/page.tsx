@@ -19,6 +19,7 @@ import { useStore } from "@/context/StoreContext";
 import { isStaff } from "@/lib/roles";
 
 const links = [
+  { href: "/hub", label: "صفحة البطولات", icon: Trophy },
   { href: "/join", label: "تسجيل الأسامي", icon: ClipboardList },
   { href: "/shop", label: "المتجر", icon: Gift },
   { href: "/rankings", label: "الترتيب", icon: Trophy },

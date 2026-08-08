@@ -1583,19 +1583,133 @@ body.sheet-open {
   font-size: 0.88rem;
 }
 
+.dock {
+  display: none;
+}
+
+.arena-actions {
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
 @media (max-width: 640px) {
+  body {
+    padding-bottom: calc(4.75rem + env(safe-area-inset-bottom, 0px));
+    font-size: 15px;
+  }
+
   .topbar {
-    padding-top: 1rem;
+    padding: 0.85rem 0.85rem 0.65rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.65rem;
+  }
+
+  .brand-mark {
+    font-size: 1.15rem;
+  }
+
+  .brand-mark-img {
+    width: 2rem;
+    height: 2rem;
   }
 
   .nav {
-    gap: 1rem;
-    font-size: 0.88rem;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.85rem;
+    font-size: 0.78rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 0.15rem;
+  }
+
+  .nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav a {
+    flex: 0 0 auto;
+    white-space: nowrap;
   }
 
   .hero {
-    padding-top: 2.5rem;
-    min-height: calc(100dvh - 4rem);
+    padding-top: 1.25rem;
+    min-height: auto;
+  }
+
+  .hero h1 {
+    font-size: clamp(1.85rem, 9vw, 2.4rem);
+  }
+
+  .hero-lead {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    padding-inline: 0.25rem;
+  }
+
+  .anthem-title {
+    font-size: 0.92rem;
+  }
+
+  .section-head h2,
+  .about h2 {
+    font-size: 1.45rem;
+  }
+
+  .section-sub,
+  .about p {
+    font-size: 0.9rem;
+  }
+
+  .dock {
+    display: flex;
+    position: fixed;
+    inset-inline: 0;
+    bottom: 0;
+    z-index: 60;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 0.15rem;
+    padding: 0.35rem 0.25rem calc(0.35rem + env(safe-area-inset-bottom, 0px));
+    background: rgba(26, 16, 13, 0.94);
+    border-top: 1px solid var(--line);
+    backdrop-filter: blur(14px);
+  }
+
+  .dock-item {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.15rem;
+    padding: 0.35rem 0.15rem;
+    font-size: 0.62rem;
+    line-height: 1.15;
+    color: var(--ink-mute);
+    text-align: center;
+  }
+
+  .dock-item.is-active,
+  .dock-item:hover {
+    color: var(--copper-bright);
+  }
+
+  .dock-icon {
+    font-size: 0.95rem;
+    line-height: 1;
+  }
+
+  .arena-actions .btn {
+    font-size: 0.82rem;
+    padding: 0.55rem 0.8rem;
+  }
+
+  .footer {
+    padding-bottom: 0.5rem;
   }
 
   .members-row {

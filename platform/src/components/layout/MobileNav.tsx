@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 
 const items = [
   { href: "/", label: "الرئيسية", icon: Home, hard: true },
-  { href: "/tournaments", label: "البطولات", icon: Trophy },
+  { href: "/hub", label: "البطولات", icon: Trophy },
   { href: "/players", label: "اللاعبون", icon: Users },
   { href: "/votes", label: "التصويت", icon: Vote },
   { href: "/more", label: "المزيد", icon: MoreHorizontal },
@@ -23,16 +23,18 @@ export function MobileNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-white/10 bg-[#1a100d]/92 px-2 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl lg:hidden">
+    <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-white/10 bg-[#1a100d]/94 px-1 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl lg:hidden">
       <div className="mx-auto flex max-w-lg items-stretch justify-between">
         {items.map((item) => {
           const Icon = item.icon;
           const active =
             item.href === "/"
-              ? pathname === "/"
-              : pathname.startsWith(item.href);
+              ? false
+              : item.href === "/hub"
+                ? pathname === "/hub" || pathname.startsWith("/tournaments")
+                : pathname.startsWith(item.href);
           const className = cn(
-            "flex flex-1 flex-col items-center gap-1 py-2.5 text-[11px] transition duration-300",
+            "flex min-w-0 flex-1 flex-col items-center gap-0.5 px-0.5 py-2 text-[10px] leading-tight transition duration-300 sm:text-[11px]",
             active
               ? "text-[var(--gold-soft)]"
               : "text-zinc-400 active:scale-95",
@@ -46,7 +48,7 @@ export function MobileNav() {
             return (
               <a key={item.href} href={item.href} className={className}>
                 <Icon size={20} className={iconClass} />
-                {item.label}
+                <span className="truncate">{item.label}</span>
               </a>
             );
           }
@@ -54,7 +56,7 @@ export function MobileNav() {
           return (
             <Link key={item.href} href={item.href} className={className}>
               <Icon size={20} className={iconClass} />
-              {item.label}
+              <span className="truncate">{item.label}</span>
             </Link>
           );
         })}

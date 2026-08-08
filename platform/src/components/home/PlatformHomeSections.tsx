@@ -59,16 +59,8 @@ export function PlatformHomeSections() {
   const activeVote = votes.find((v) => v.active);
 
   return (
-    <div id="arena" className="border-t border-[var(--line)]">
-      <div className="mx-auto max-w-7xl space-y-16 px-4 py-12 lg:px-6">
-        <section className="text-center">
-          <p className="text-xs tracking-[0.25em] text-[var(--gold)]">ARENA</p>
-          <h2 className="section-title mt-2 text-3xl font-bold">بطولات طويق</h2>
-          <p className="mx-auto mt-3 max-w-2xl text-sm text-[var(--muted)]">
-            التسجيل والشجرة والترتيب والمتجر والتصويت — كلها هنا في نفس موقع طويق.
-          </p>
-        </section>
-
+    <div id="arena">
+      <div className="mx-auto max-w-7xl space-y-12 px-3 py-8 sm:space-y-16 sm:px-4 sm:py-12 lg:px-6">
         {homeBoxes.length > 0 ? (
           <section className="space-y-4">
             <SectionHeader
