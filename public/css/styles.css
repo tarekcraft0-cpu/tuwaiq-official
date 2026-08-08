@@ -325,54 +325,45 @@ main,
   animation: logo-glow 4.5s ease-in-out infinite alternate;
 }
 
-/* العصا من منتصف الأفاتار (وراه)، والقماش لليمين فوق الكلام */
-.tuwaiq-flag-pole-wrap {
+/* العلم كامل خلف الأفاتار: عصا من الوسط + قماش لليمين */
+.tuwaiq-flag {
   position: absolute;
   left: 50%;
-  bottom: 8%;
+  bottom: 10%;
   z-index: 1;
-  width: 0.32rem;
-  height: clamp(11.5rem, 34vw, 15.5rem);
-  transform: translateX(-50%);
+  width: clamp(8.5rem, 26vw, 12rem);
+  height: clamp(12rem, 36vw, 16rem);
+  transform: translateX(-0.16rem);
   pointer-events: none;
   animation: flag-rise 1.15s cubic-bezier(0.2, 0.85, 0.25, 1) both;
 }
 
 .tuwaiq-flag-pole {
-  display: block;
-  width: 100%;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0.34rem;
   height: 100%;
   border-radius: 999px;
-  background: linear-gradient(180deg, #f0e0c8, #a67c52 40%, #6b4a32 78%, #3d291c);
+  background: linear-gradient(180deg, #f0e0c8, #a67c52 38%, #6b4a32 76%, #3d291c);
   box-shadow:
     0 0 14px rgba(166, 124, 82, 0.35),
     2px 0 6px rgba(0, 0, 0, 0.22);
 }
 
-.tuwaiq-flag-cloth-wrap {
-  position: absolute;
-  left: 50%;
-  top: -0.35rem;
-  z-index: 4;
-  width: clamp(7.8rem, 24vw, 11rem);
-  height: clamp(4.4rem, 13vw, 5.8rem);
-  margin-left: 0.12rem;
-  pointer-events: none;
-  transform-origin: left center;
-  animation:
-    flag-cloth-rise 1.15s cubic-bezier(0.2, 0.85, 0.25, 1) both,
-    flag-sway 3s ease-in-out 1.15s infinite;
-}
-
 .tuwaiq-flag-cloth {
-  display: block;
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  left: 0.3rem;
+  top: 0.2rem;
+  width: calc(100% - 0.3rem);
+  height: 44%;
   overflow: hidden;
-  border-radius: 0.2rem 0.75rem 0.75rem 0.2rem;
+  border-radius: 0.15rem 0.75rem 0.75rem 0.15rem;
   border: 1px solid rgba(210, 180, 140, 0.38);
   background: linear-gradient(160deg, #3a261e 0%, #1a100d 60%, #120c0a 100%);
+  transform-origin: left center;
   box-shadow: 0 14px 26px rgba(0, 0, 0, 0.38);
+  animation: flag-sway 3s ease-in-out infinite;
   filter: url("#flag-ripple") drop-shadow(0 10px 16px rgba(0, 0, 0, 0.28));
 }
 
@@ -388,22 +379,11 @@ main,
 @keyframes flag-rise {
   from {
     opacity: 0;
-    transform: translateX(-50%) translateY(1.6rem) scale(0.92);
+    transform: translateX(-0.16rem) translateY(1.6rem) scale(0.92);
   }
   to {
     opacity: 1;
-    transform: translateX(-50%) translateY(0) scale(1);
-  }
-}
-
-@keyframes flag-cloth-rise {
-  from {
-    opacity: 0;
-    transform: translateY(1.2rem) scale(0.92);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateX(-0.16rem) translateY(0) scale(1);
   }
 }
 
@@ -1638,13 +1618,9 @@ body.sheet-open {
     padding: 0.55rem 0.7rem;
   }
 
-  .tuwaiq-flag-pole-wrap {
-    height: 10.2rem;
-  }
-
-  .tuwaiq-flag-cloth-wrap {
-    width: 6.8rem;
-    height: 4rem;
+  .tuwaiq-flag {
+    width: 7.4rem;
+    height: 11rem;
   }
 
   .float-chip {
@@ -1670,8 +1646,7 @@ body.sheet-open {
   .ridge,
   .dust,
   .hero-logo,
-  .tuwaiq-flag-pole-wrap,
-  .tuwaiq-flag-cloth-wrap,
+  .tuwaiq-flag,
   .tuwaiq-flag-cloth,
   .float-orbit,
   .float-chip,
