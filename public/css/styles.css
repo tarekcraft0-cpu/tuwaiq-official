@@ -325,15 +325,15 @@ main,
   animation: logo-glow 4.5s ease-in-out infinite alternate;
 }
 
-/* العلم كامل خلف الأفاتار: عصا من الوسط + قماش لليمين */
+/* العلم كامل خلف الأفاتار ومرتفع لفوق شوية */
 .tuwaiq-flag {
   position: absolute;
   left: 50%;
-  bottom: 10%;
+  bottom: 28%;
   z-index: 1;
   width: clamp(8.5rem, 26vw, 12rem);
-  height: clamp(12rem, 36vw, 16rem);
-  transform: translateX(-0.16rem);
+  height: clamp(13.5rem, 40vw, 18rem);
+  transform: translateX(-0.16rem) translateY(-2.4rem);
   pointer-events: none;
   animation: flag-rise 1.15s cubic-bezier(0.2, 0.85, 0.25, 1) both;
 }
@@ -354,9 +354,9 @@ main,
 .tuwaiq-flag-cloth {
   position: absolute;
   left: 0.3rem;
-  top: 0.2rem;
+  top: 0.1rem;
   width: calc(100% - 0.3rem);
-  height: 44%;
+  height: 38%;
   overflow: hidden;
   border-radius: 0.15rem 0.75rem 0.75rem 0.15rem;
   border: 1px solid rgba(210, 180, 140, 0.38);
@@ -379,11 +379,11 @@ main,
 @keyframes flag-rise {
   from {
     opacity: 0;
-    transform: translateX(-0.16rem) translateY(1.6rem) scale(0.92);
+    transform: translateX(-0.16rem) translateY(-0.4rem) scale(0.92);
   }
   to {
     opacity: 1;
-    transform: translateX(-0.16rem) translateY(0) scale(1);
+    transform: translateX(-0.16rem) translateY(-2.4rem) scale(1);
   }
 }
 
