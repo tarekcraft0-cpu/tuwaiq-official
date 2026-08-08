@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth-server";
+import { ensureOwnerAccount } from "@/lib/ensure-owner";
 import { isSupabaseConfigured } from "@/lib/supabase/admin";
 import { getStoreSnapshot, saveStoreSnapshot } from "@/lib/server-store";
 
@@ -11,6 +12,7 @@ export async function GET() {
     );
   }
   try {
+    await ensureOwnerAccount();
     const data = await getStoreSnapshot();
     return NextResponse.json({ ok: true, storage: "supabase", data });
   } catch (error) {

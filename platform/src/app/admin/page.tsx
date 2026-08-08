@@ -6,11 +6,13 @@ import {
   BarChart3,
   ClipboardList,
   Megaphone,
+  MessageSquareWarning,
   Shield,
   Trophy,
   Users,
   Vote,
 } from "lucide-react";
+import { SiteOpinionsPanel } from "@/components/admin/SiteOpinionsPanel";
 import { useStore } from "@/context/StoreContext";
 import { BRACKET_SIZE_OPTIONS, createBracket } from "@/lib/bracket";
 import {
@@ -39,7 +41,8 @@ type Tab =
   | "votes"
   | "news"
   | "users"
-  | "achievements";
+  | "achievements"
+  | "site";
 
 export default function AdminPage() {
   const {
@@ -187,6 +190,11 @@ export default function AdminPage() {
     { id: "news", label: "الأخبار", icon: <Megaphone size={16} /> },
     { id: "users", label: "المستخدمون", icon: <Users size={16} /> },
     { id: "achievements", label: "الإنجازات", icon: <Shield size={16} /> },
+    {
+      id: "site",
+      label: "آراء الموقع",
+      icon: <MessageSquareWarning size={16} />,
+    },
   ];
 
   const activeTournament =
@@ -1718,6 +1726,8 @@ export default function AdminPage() {
           </button>
         </form>
       ) : null}
+
+      {tab === "site" ? <SiteOpinionsPanel onNotify={notify} /> : null}
     </div>
   );
 }

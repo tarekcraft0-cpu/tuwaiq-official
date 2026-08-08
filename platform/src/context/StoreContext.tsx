@@ -237,9 +237,33 @@ const StoreContext = createContext<StoreContextValue | null>(null);
 const AUTH_KEY = `${STORE_VERSION}-auth`;
 const DATA_KEY = `${STORE_VERSION}-data`;
 
+function seedOwnerPlayer(players: Player[]): Player[] {
+  const username = "TuwaiqAdmin";
+  const password = "Tuwaiq@Admin26";
+  const idx = players.findIndex(
+    (p) => p.username.toLowerCase() === username.toLowerCase(),
+  );
+  if (idx >= 0) {
+    const next = players.slice();
+    next[idx] = {
+      ...next[idx]!,
+      role: "owner",
+      password,
+      rank: "المالك",
+      badges: Array.from(new Set([...(next[idx]!.badges || []), "المالك"])),
+    };
+    return next;
+  }
+  const owner = createEmptyPlayer(username, password, "/logo.png");
+  owner.role = "owner";
+  owner.rank = "المالك";
+  owner.badges = ["المالك", "الجيل الأول"];
+  return [owner, ...players];
+}
+
 function blankState(): StoreState {
   return {
-    players: [],
+    players: seedOwnerPlayer([]),
     tournaments: [],
     votes: [],
     news: [],
@@ -406,7 +430,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         if (savedData) {
           const parsed = JSON.parse(savedData) as StoreState;
           setPlayers(
-            (parsed.players ?? []).map((p) => normalizePlayer(p)),
+            seedOwnerPlayer(
+              (parsed.players ?? []).map((p) => normalizePlayer(p)),
+            ),
           );
           setTournaments(parsed.tournaments ?? []);
           setVotes(parsed.votes ?? []);
