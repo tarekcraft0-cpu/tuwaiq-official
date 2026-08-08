@@ -9,11 +9,15 @@ const ADMIN_KEY = process.env.ADMIN_KEY || "tuwaiq-admin-change-me";
 const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, "data");
 const DB_PATH = path.join(DATA_DIR, "db.json");
 const SEED_PATH = path.join(__dirname, "data", "db.seed.json");
+const PLATFORM_DIR = path.join(__dirname, "platform");
+const DEV = process.env.NODE_ENV !== "production";
 
 const app = express();
 app.use(cors());
 app.use(express.json({ limit: "1mb" }));
 app.use(express.static(path.join(__dirname, "public")));
+// أصول منصة البطولات (شعار، أيقونات، manifest) بدون استبدال ملفات طويق
+app.use(express.static(path.join(PLATFORM_DIR, "public")));
 
 function readJsonSafe(filePath, fallback) {
   try {
@@ -367,18 +371,44 @@ app.delete("/api/members/:id", requireAdmin, (req, res) => {
   res.json({ ok: true });
 });
 
-app.get("*", (_req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
-});
-
 ensureDb();
 
-if (process.env.VERCEL) {
-  module.exports = app;
-} else {
+function loadNext() {
+  try {
+    return require(path.join(PLATFORM_DIR, "node_modules", "next"));
+  } catch {
+    return require("next");
+  }
+}
+
+async function start() {
+  if (process.env.VERCEL) {
+    module.exports = app;
+    return;
+  }
+
+  const next = loadNext();
+  const nextApp = next({
+    dev: DEV,
+    dir: PLATFORM_DIR,
+    hostname: "0.0.0.0",
+    port: PORT,
+  });
+  const handle = nextApp.getRequestHandler();
+  await nextApp.prepare();
+
+  // كل مسارات منصة البطولات (Next) — بعد واجهة طويق وواجهات /api الخاصة بها
+  app.all(/.*/, (req, res) => handle(req, res));
+
   app.listen(PORT, () => {
     console.log(`سيرفر طويق الرسمي يعمل على http://localhost:${PORT}`);
     console.log(`التخزين الدائم: ${DATA_DIR}`);
     console.log(`قاعدة البيانات: ${DB_PATH}`);
+    console.log(`منصة البطولات (Next): ${PLATFORM_DIR} [${DEV ? "dev" : "prod"}]`);
   });
 }
+
+start().catch((err) => {
+  console.error("فشل تشغيل السيرفر:", err);
+  process.exit(1);
+});

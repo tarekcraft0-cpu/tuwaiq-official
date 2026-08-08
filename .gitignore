@@ -1,4 +1,10 @@
 node_modules/
+platform/node_modules/
+platform/.next/
+platform/.env.local
 .env
+.env.local
 *.log
 .DS_Store
+data/db.json
+data/db.merged.json

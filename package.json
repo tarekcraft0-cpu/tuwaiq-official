@@ -1,11 +1,14 @@
 {
   "name": "tuwaiq-official",
   "version": "1.0.0",
-  "description": "الموقع الرسمي لقروب طويق — سيرفر مستقل",
+  "description": "الموقع الرسمي لقروب طويق — واجهة طويق + منصة البطولات",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node --watch server.js"
+    "postinstall": "npm install --prefix platform",
+    "build": "npm run build --prefix platform",
+    "start": "cross-env NODE_ENV=production node server.js",
+    "dev": "node server.js",
+    "dev:platform": "npm run dev --prefix platform"
   },
   "engines": {
     "node": ">=18"
@@ -13,6 +16,7 @@
   "private": true,
   "dependencies": {
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "express": "^4.21.2",
     "uuid": "^11.1.0"
   }
