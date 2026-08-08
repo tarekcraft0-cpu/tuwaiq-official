@@ -438,29 +438,8 @@ const groupOpinionForm = document.getElementById("group-opinion-form");
 const groupFormError = document.getElementById("group-form-error");
 let groupOpinionsCache = [];
 
-// مسارات تطير حول الشعار من برّه — مو وراه ولا تحتّه
-const FLOAT_PATHS_DESKTOP = [
-  { x1: "-13rem", y1: "-8rem", x2: "-14rem", y2: "-1rem", x3: "-13rem", y3: "7rem", x4: "-12rem", y4: "2rem" },
-  { x1: "13rem", y1: "-7.5rem", x2: "14rem", y2: "0.5rem", x3: "13rem", y3: "7.5rem", x4: "12rem", y4: "-2rem" },
-  { x1: "-4rem", y1: "-11rem", x2: "4rem", y2: "-11.5rem", x3: "10rem", y3: "-9rem", x4: "-8rem", y4: "-10rem" },
-  { x1: "-3rem", y1: "11rem", x2: "5rem", y2: "11.5rem", x3: "10rem", y3: "9.5rem", x4: "-9rem", y4: "10rem" },
-  { x1: "-12.5rem", y1: "4rem", x2: "-13.5rem", y2: "-5rem", x3: "-11rem", y3: "-9rem", x4: "-12rem", y4: "8rem" },
-  { x1: "12.5rem", y1: "3.5rem", x2: "13.5rem", y2: "-4rem", x3: "11.5rem", y3: "-8.5rem", x4: "12rem", y4: "8rem" },
-];
-
-const FLOAT_PATHS_MOBILE = [
-  { x1: "-6.2rem", y1: "-7rem", x2: "-6.8rem", y2: "-1rem", x3: "-6.4rem", y3: "6rem", x4: "-5.8rem", y4: "1.5rem" },
-  { x1: "6.2rem", y1: "-6.5rem", x2: "6.8rem", y2: "0", x3: "6.4rem", y3: "6.2rem", x4: "5.8rem", y4: "-1.5rem" },
-  { x1: "-2rem", y1: "-9rem", x2: "2.2rem", y2: "-9.2rem", x3: "5rem", y3: "-7.5rem", x4: "-4.5rem", y4: "-8.2rem" },
-  { x1: "-1.5rem", y1: "8.8rem", x2: "2.5rem", y2: "9rem", x3: "5rem", y3: "7.6rem", x4: "-4.8rem", y4: "8rem" },
-  { x1: "-6rem", y1: "3rem", x2: "-6.5rem", y2: "-4rem", x3: "-5.5rem", y3: "-7rem", x4: "-5.8rem", y4: "6.5rem" },
-  { x1: "6rem", y1: "2.8rem", x2: "6.5rem", y2: "-3.5rem", x3: "5.5rem", y3: "-6.8rem", x4: "5.8rem", y4: "6.2rem" },
-];
-
-function getFloatPaths() {
-  return window.matchMedia("(max-width: 640px)").matches
-    ? FLOAT_PATHS_MOBILE
-    : FLOAT_PATHS_DESKTOP;
+function getOrbitRadius() {
+  return window.matchMedia("(max-width: 640px)").matches ? "7.6rem" : "11.2rem";
 }
 
 function renderGroupOpinionsList(opinions) {
@@ -496,24 +475,23 @@ function renderHeroFloatOpinions(opinions) {
     return;
   }
 
-  const paths = getFloatPaths();
+  const radius = getOrbitRadius();
+  const count = latest.length || 1;
   heroFloatOpinions.innerHTML = latest
     .map((op, index) => {
-      const path = paths[index % paths.length];
-      const dur = `${14 + (index % 4) * 1.8}s`;
-      const delay = `${(index * 0.45).toFixed(2)}s`;
+      const durSec = 22;
+      const dur = `${durSec}s`;
+      const delay = `${((-index / count) * durSec).toFixed(2)}s`;
       return `
         <div
-          class="float-chip"
-          style="
-            --x1:${path.x1};--y1:${path.y1};
-            --x2:${path.x2};--y2:${path.y2};
-            --x3:${path.x3};--y3:${path.y3};
-            --x4:${path.x4};--y4:${path.y4};
-            --dur:${dur};--delay:${delay};
-          "
+          class="float-orbit"
+          style="--dur:${dur};--delay:${delay};--radius:${radius};"
         >
-          <span>${escapeHtml(String(op.text || "").trim())}</span>
+          <div class="float-orbit-anchor">
+            <div class="float-chip">
+              <span>${escapeHtml(String(op.text || "").trim())}</span>
+            </div>
+          </div>
         </div>
       `;
     })
