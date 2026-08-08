@@ -1651,9 +1651,23 @@ body.sheet-open {
   justify-content: flex-start;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 1023px) {
   body {
     padding-bottom: calc(4.85rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .dock {
+    display: flex;
+  }
+
+  /* على الجوال/التابلت الاختصارات فوق تتداخل — نخفيها والقائمة السفلية تكفي */
+  .nav-desktop {
+    display: none !important;
+  }
+}
+
+@media (max-width: 640px) {
+  body {
     font-size: 15px;
   }
 
@@ -1672,11 +1686,6 @@ body.sheet-open {
   .brand-mark-img {
     width: 2.1rem;
     height: 2.1rem;
-  }
-
-  /* على الجوال الاختصارات فوق تتداخل — نخفيها والقائمة السفلية تكفي */
-  .nav-desktop {
-    display: none !important;
   }
 
   .hero {
